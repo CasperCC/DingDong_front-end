@@ -1,0 +1,6 @@
+<!--pages/message/message.wxml-->
+<text>pages/message/message.wxml</text>
+<view id="message"></view>
+<form id="form">
+  <input id="input" /><button>Send</button>
+</form>
