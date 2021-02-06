@@ -1,6 +1,12 @@
 // pages/message/message.js
+
 const io = require('../../utils/weapp.socket.io')
-const socket = io('http://127.0.0.1:7001')
+// 设置socket连接地址
+const socketUrl = 'http://127.0.0.1' + ':' + '7001'
+const socket = io(socketUrl);
+
+var message;
+var that;
 
 Page({
 
@@ -8,27 +14,56 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    news: [
+      {me: ''},
+    ]
   },
 
+  randomString: function (len) {
+    len = len || 32;
+    var $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890';
+    var maxPos = $chars.length;
+    var pwd = '';
+    var i;
+    for (i = 0; i < len; i++) {
+      pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
+    }
+    return pwd;
+  },
+
+  searchBox: function (e) {
+    message = e.detail.value.news;
+    socket.emit('exchange', {
+      target: this.randomString(20),
+      payload: {
+        msg: message
+      }
+    });
+  },
   
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    socket.on('connect', function() {
-      console.log('connected')
+    that = this;
+    this.socketStart();  
+  },
+
+  socketStart: function() {
+    // 发送连接成功标志
+    socket.emit('connection', {
+      connect: 'ok'
     });
-    socket.emit('exchange', {
-      target: 'Dkn3UXSu8_jHvKBmAAHW',
-      payload: {
-        msg: 'test'
-      }
+    // 接收消息
+    socket.on('new', function(e) {
+      var newMes = {me: e};
+      let news = that.data.news;
+        news.push(newMes);
+        that.setData({
+          news: news
+        });
+      console.log(news);
     });
-    socket.on('news', () => {
-      console.log('received news: ', news)
-    });
-    
   },
 
   /**

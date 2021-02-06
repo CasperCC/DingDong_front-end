@@ -1,6 +1,9 @@
 <!--pages/message/message.wxml-->
 <text>pages/message/message.wxml</text>
-<view id="message"></view>
-<form id="form">
-  <input id="input" /><button>Send</button>
+<view wx:for='{{news}}'  wx:key="index">
+  <view id="message">{{item.me}}</view>
+</view>
+
+<form id="form" bindsubmit="searchBox">
+  <input id="input" name='news' /><button form-type="submit">Send</button>
 </form>
