@@ -3,10 +3,14 @@
 const io = require('../../utils/weapp.socket.io')
 // 设置socket连接地址
 const socketUrl = 'http://127.0.0.1' + ':' + '7001'
-const socket = io(socketUrl);
+const socket = io(socketUrl);;
+const heartbeat = io(socketUrl+'/heartbeat');
 
-var message;
 var that;
+var message;
+var intervalId;
+var heartBeatTimeoutId;
+var heartBeatRes;
 
 Page({
 
@@ -14,9 +18,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    news: [
-      {me: ''},
-    ]
+    news: []
   },
 
   randomString: function (len) {
@@ -46,14 +48,21 @@ Page({
    */
   onLoad: function (options) {
     that = this;
-    this.socketStart();  
+    console.log('onload');
+    this.socketStart();
   },
 
   socketStart: function() {
     // 发送连接成功标志
     socket.emit('connection', {
-      connect: 'ok'
+      connect: 'connected!'
     });
+    // 心跳检测
+    intervalId = setInterval(() => {
+      heartbeat.emit('heartbeat', {
+        msg: 'ok'
+      });
+    }, 1000);
     // 接收消息
     socket.on('new', function(e) {
       var newMes = {me: e};
@@ -64,6 +73,20 @@ Page({
         });
       console.log(news);
     });
+  },
+
+  socketReco: function() {
+    heartbeat.on('heartBeatRes', (e) => {
+      heartBeatRes = e;
+      clearTimeout(heartBeatTimeoutId);
+    });
+    heartBeatTimeoutId = setTimeout(() => {
+      if(!heartBeatRes) {
+        console.log('reconnecting...');
+        that.onLoad();
+      }
+    }, 3000);
+    
   },
 
   /**
@@ -77,21 +100,22 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    
   },
 
   /**
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-
+    // clearInterval(intervalId);
+    // console.log('onhide'+intervalId);
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-
+    clearInterval(intervalId);
   },
 
   /**
