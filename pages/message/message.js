@@ -1,16 +1,12 @@
 // pages/message/message.js
-
+const app = getApp()
 const io = require('../../utils/weapp.socket.io')
 // 设置socket连接地址
 const socketUrl = 'http://127.0.0.1' + ':' + '7001'
-const socket = io(socketUrl);;
-const heartbeat = io(socketUrl+'/heartbeat');
-
-var that;
-var message;
-var intervalId;
-var heartBeatTimeoutId;
-var heartBeatRes;
+const socket = io(socketUrl)
+const heartbeat = io(socketUrl+'/heartbeat')
+const code = app.globalData.code
+var that, message, intervalId, heartBeatTimeoutId, heartBeatRes
 
 Page({
 
@@ -18,74 +14,97 @@ Page({
    * 页面的初始数据
    */
   data: {
-    news: []
+    news: [],
+    code: app.globalData.code,
+    nickName: app.globalData.nickName
   },
 
   randomString: function (len) {
-    len = len || 32;
-    var $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890';
-    var maxPos = $chars.length;
-    var pwd = '';
-    var i;
+    len = len || 32
+    var $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890'
+    var maxPos = $chars.length
+    var pwd = ''
+    var i
     for (i = 0; i < len; i++) {
-      pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
+      pwd += $chars.charAt(Math.floor(Math.random() * maxPos))
     }
-    return pwd;
+    return pwd
   },
 
   searchBox: function (e) {
-    message = e.detail.value.news;
+    message = e.detail.value.news
     socket.emit('exchange', {
-      target: this.randomString(20),
+      target: 'kTt7gN7b8O1mweh1AAAM',
       payload: {
         msg: message
       }
-    });
+    })
   },
   
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    that = this;
-    console.log('onload');
-    this.socketStart();
+    that = this
+    that.socketStart();
+    // console.log(app.globalData.code)
   },
 
   socketStart: function() {
     // 发送连接成功标志
     socket.emit('connection', {
       connect: 'connected!'
-    });
+    })
     // 心跳检测
     intervalId = setInterval(() => {
       heartbeat.emit('heartbeat', {
         msg: 'ok'
-      });
-    }, 1000);
+      })
+    }, 1000)
     // 接收消息
     socket.on('new', function(e) {
-      var newMes = {me: e};
-      let news = that.data.news;
-        news.push(newMes);
+      var newMes = {me: e}
+      let news = that.data.news
+        news.push(newMes)
         that.setData({
           news: news
-        });
-      console.log(news);
-    });
+        })
+      console.log(news)
+    })
+    wx.login({
+      success: res => {
+        wx.request({
+          url: 'http://127.0.0.1:7001/api/getUserInfo',
+          method: 'POST',
+          data: {
+            code: res.code,
+            nickName: app.globalData.userInfo.nickName,
+            avatarUrl: app.globalData.userInfo.avatarUrl
+          },
+          dataType: 'json',
+          header: {
+            'content-type': 'application/x-www-form-urlencoded'
+          },
+          success(data) {
+            console.log(data.data)
+          }
+        })
+      }
+    })
+    
   },
 
   socketReco: function() {
     heartbeat.on('heartBeatRes', (e) => {
-      heartBeatRes = e;
-      clearTimeout(heartBeatTimeoutId);
-    });
+      heartBeatRes = e
+      clearTimeout(heartBeatTimeoutId)
+    })
     heartBeatTimeoutId = setTimeout(() => {
       if(!heartBeatRes) {
-        console.log('reconnecting...');
-        that.onLoad();
+        console.log('reconnecting...')
+        that.onLoad()
       }
-    }, 3000);
+    }, 3000)
     
   },
 
@@ -107,15 +126,15 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-    // clearInterval(intervalId);
-    // console.log('onhide'+intervalId);
+    // clearInterval(intervalId)
+    // console.log('onhide'+intervalId)
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-    clearInterval(intervalId);
+    clearInterval(intervalId)
   },
 
   /**

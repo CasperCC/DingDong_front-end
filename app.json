@@ -3,7 +3,8 @@
     "pages/index/index",
     "pages/message/message",
     "pages/mine/mine",
-    "pages/logs/logs"
+    "pages/logs/logs",
+    "pages/contacts/contacts"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -14,23 +15,29 @@
   "tabBar": {
     "color": "#a9b7b7",
     "selectedColor": "#2F4F4F",
-    "borderStyle": "white",
+    "borderStyle": "black",
     "list": [
       {
-        "selectedIconPath": "",
-        "iconPath": "",
+        "selectedIconPath": "utils/resources/icons/index_fill.png",
+        "iconPath": "utils/resources/icons/index.png",
         "pagePath": "pages/index/index",
         "text": "首页"
       },
       {
-        "selectedIconPath": "",
-        "iconPath": "",
+        "selectedIconPath": "utils/resources/icons/message_fill.png",
+        "iconPath": "utils/resources/icons/message.png",
         "pagePath": "pages/message/message",
         "text": "消息"
       },
       {
-        "selectedIconPath": "",
-        "iconPath": "",
+        "selectedIconPath": "utils/resources/icons/contacts_fill.png",
+        "iconPath": "utils/resources/icons/contacts.png",
+        "pagePath": "pages/contacts/contacts",
+        "text": "通讯录"
+      },
+      {
+        "selectedIconPath": "utils/resources/icons/mine_fill.png",
+        "iconPath": "utils/resources/icons/mine.png",
         "pagePath": "pages/mine/mine",
         "text": "我的"
       }
