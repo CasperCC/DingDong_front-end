@@ -1,21 +1,119 @@
-/**index.wxss**/
-.userinfo {
+.onTabLine{
+  width: 120rpx;
+  height: 5rpx;
+  background-color:#4074DD;
+  margin-top:15rpx;
+}
+.line{
+  width: 750rpx;
+  height: 2rpx;
+  background-color: #F2F2F2;
+  margin: 0rpx auto 0 auto;
+}
+.message,.notify{
+  display: flex;
+  flex-direction: row;
+  font-size:36rpx;
+  margin-top: 20rpx;
+  width: 120rpx;
+  color:#CDCDCD;
+ 
+}
+.message{
+  margin-left: 200rpx;
+}
+.notify{
+  margin-left: 150rpx;
+}
+.active{
+  color:#4074DD;
+}
+.selectTab{
+  position: fixed;
+  background-color: #fff;
+  z-index: 100;
+}
+/*私信消息*/
+.message-list{
+  background-color:#f2f2f2;
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
-
-.userinfo-avatar {
-  width: 128rpx;
-  height: 128rpx;
-  margin: 20rpx;
-  border-radius: 50%;
+.user{
+  height: 156rpx;
+  display: flex;
+  flex-direction: row;
 }
-
-.userinfo-nickname {
-  color: #aaa;
+.user:active{
+  background-color: #d8d8d8;
 }
-
-.usermotto {
-  margin-top: 200px;
+.user-content{
+  display: flex;
+  flex-direction: column;
+}
+.header-icon{
+  width: 104rpx;
+  height: 104rpx;
+  border-radius: 10rpx;
+  margin-left: 20rpx;
+  margin-top: 26rpx;
+}
+.msgline{
+  display: flex;
+  flex-direction: row;
+}
+.apart{
+  margin-left: 20rpx;
+  display: flex;
+  flex-direction: row;
+  width: 400rpx;
+}
+.username{
+  font-size: 36rpx;
+  margin-top: 26rpx;
+  font-weight: 400;
+}
+.time{
+  display: flex;
+  width: 60rpx;
+  font-size: 24rpx;
+  margin-top: 36rpx;
+  color: #aeaeae;
+  margin-left: 140rpx;
+}
+/*对话框消息内容*/
+.dialog{
+  width: 545rpx;
+  font-size: 28rpx;
+  color: #aeaeae;
+  margin-left: 20rpx;
+  margin-top: 15rpx;
+}
+/*气泡样式*/
+.bubble{
+  background-color: rgb(252, 36, 33);
+  border-radius: 80rpx;
+  width: 40rpx;
+  height: 40rpx;
+  margin-top: 20rpx;
+}
+.bubble .num{
+  font-size: 28rpx;
+  color: #ffffff;
+  font-weight: 500;
+  margin-left: 12rpx;
+}
+/*最帅的分割线*/
+.liner{
+  width: 100%;
+  height: 2rpx;
+  background-color: rgb(230, 230, 230);
+  margin-top: 0rpx;
+}
+/*未读消息框*/
+.unread{
+  margin-top: 16rpx;
+  font-size: 26rpx;
+  color: #aeaeae;
+  text-align: center;
 }

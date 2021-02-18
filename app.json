@@ -1,8 +1,8 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/message/message",
     "pages/mine/mine",
+    "pages/message/message",
     "pages/logs/logs",
     "pages/contacts/contacts"
   ],
@@ -18,15 +18,9 @@
     "borderStyle": "black",
     "list": [
       {
-        "selectedIconPath": "utils/resources/icons/index_fill.png",
-        "iconPath": "utils/resources/icons/index.png",
-        "pagePath": "pages/index/index",
-        "text": "首页"
-      },
-      {
         "selectedIconPath": "utils/resources/icons/message_fill.png",
         "iconPath": "utils/resources/icons/message.png",
-        "pagePath": "pages/message/message",
+        "pagePath": "pages/index/index",
         "text": "消息"
       },
       {

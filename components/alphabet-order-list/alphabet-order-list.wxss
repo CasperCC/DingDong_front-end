@@ -80,6 +80,7 @@
 .item-image {
   width: 100rpx;
   height: 100rpx;
+  border-radius: 10rpx;
   background-color: whitesmoke;
   margin-right: 30rpx;
 }
@@ -133,7 +134,6 @@ radio {
   display:-webkit-box;
   display:-webkit-flex;
   display:flex;
-
   align-items: center;
   justify-content: center;
 }

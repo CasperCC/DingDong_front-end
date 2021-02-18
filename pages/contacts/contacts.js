@@ -16,206 +16,7 @@ Page({
     checkType: '', //checkbox-多选类型 radio-单选类型 其他-基本通讯录
 
     staffList:[ //联系人列表
-      {
-        id: 20,
-        name: '$efff',
-        mobile: '13895391221',
-        photo: '/utils/resources/images/head6.jpeg',
-        positionName: '办公室职员',
-        checked: false,
-      },
-      {
-        id: 100,
-        name: '安国庆',
-        mobile: '13897391221',
-        photo: '/utils/resources/images/head6.jpeg',
-        positionName: '办公室职员',
-        checked: false,
-      },
-      {
-        id: 101,
-        name: '邦国庆',
-        mobile: '13897391221',
-        photo: '/utils/resources/images/head6.jpeg',
-        positionName: '老师',
-        checked: false,
-      },
-      {
-        id: 102,
-        name: '曹国庆',
-        mobile: '13897391221',
-        photo: '/utils/resources/images/head6.jpeg',
-        positionName: '教务处主任',
-        checked: false,
-      },
-      {
-        id: 103,
-        name: '杜国庆',
-        mobile: '13897391221',
-        photo: '/utils/resources/images/head6.jpeg',
-        positionName: '教务处',
-        checked: false,
-      },
-      {
-        id: 104,
-        name: '恩国庆',
-        mobile: '13897391221',
-        photo: '/utils/resources/images/head6.jpeg',
-        positionName: '班主任',
-        checked: false,
-      },
-      {
-        id: 105,
-        name: '付国庆',
-        mobile: '13897391221',
-        photo: '/utils/resources/images/head6.jpeg',
-        positionName: '班主任',
-        checked: false,
-      },
-      {
-        id: 106,
-        name: '刚国庆',
-        mobile: '13897391221',
-        photo: '/utils/resources/images/head6.jpeg',
-        positionName: '老师',
-        checked: false,
-      },
-      {
-        id: 107,
-        name: '黄国庆',
-        mobile: '13897391221',
-        photo: '/utils/resources/images/head6.jpeg',
-        positionName: '老师',
-        checked: false,
-      },
-      {
-        id: 107,
-        name: '艾国庆',
-        mobile: '13897391221',
-        photo: '/utils/resources/images/head6.jpeg',
-        positionName: '行政人员',
-        checked: false,
-      },
-      {
-        id: 108,
-        name: '界国庆',
-        mobile: '13897391221',
-        photo: '/utils/resources/images/head6.jpeg',
-        positionName: '行政人员',
-        checked: false,
-      },
-      {
-        id: 109,
-        name: '凯国庆',
-        mobile: '13897391221',
-        photo: '/utils/resources/images/head6.jpeg',
-        positionName: '行政人员',
-        checked: false,
-      },
-      {
-        id: 110,
-        name: '罗国庆',
-        mobile: '13897391221',
-        photo: '/utils/resources/images/head6.jpeg',
-        positionName: '办公室职员',
-        checked: false,
-      },
-      {
-        id: 111,
-        name: '蒙国庆',
-        mobile: '13897391221',
-        photo: '/utils/resources/images/head6.jpeg',
-        positionName: '办公室职员',
-        checked: false,
-      },
-      {
-        id: 112,
-        name: '南国庆',
-        mobile: '13897391221',
-        photo: '/utils/resources/images/head6.jpeg',
-        positionName: '办公室职员',
-        checked: false,
-      },
-      {
-        id: 113,
-        name: '欧国庆',
-        mobile: '13897391221',
-        photo: '/utils/resources/images/head6.jpeg',
-        positionName: '行政人员',
-        checked: false,
-      },
-      {
-        id: 114,
-        name: '平国庆',
-        mobile: '13897391221',
-        photo: '/utils/resources/images/head6.jpeg',
-        positionName: '老师',
-        checked: false,
-      },
-      {
-        id: 115,
-        name: '钱国庆',
-        mobile: '13897391221',
-        photo: '/utils/resources/images/head6.jpeg',
-        positionName: '老师',
-        checked: false,
-      },
-      {
-        id: 116,
-        name: '任国庆',
-        mobile: '13897391221',
-        photo: '/utils/resources/images/head6.jpeg',
-        positionName: '办公室职员',
-        checked: false,
-      },
-      {
-        id: 117,
-        name: '思国庆',
-        mobile: '13897391221',
-        photo: '/utils/resources/images/head6.jpeg',
-        positionName: '老师',
-        checked: false,
-      },
-      {
-        id: 118,
-        name: '图国庆',
-        mobile: '13897391221',
-        photo: '/utils/resources/images/head6.jpeg',
-        positionName: '老师',
-        checked: false,
-      },
-      {
-        id: 119,
-        name: '王国庆',
-        mobile: '13897391221',
-        photo: '/utils/resources/images/head6.jpeg',
-        positionName: '老师',
-        checked: false,
-      },
-      {
-        id: 120,
-        name: '向国庆',
-        mobile: '13897391221',
-        photo: '/utils/resources/images/head6.jpeg',
-        positionName: '办公室职员',
-        checked: false,
-      },
-      {
-        id: 121,
-        name: '杨国庆',
-        mobile: '13897391221',
-        photo: '/utils/resources/images/head6.jpeg',
-        positionName: '班主任',
-        checked: false,
-      },
-      {
-        id: 122,
-        name: '增国庆',
-        mobile: '13897391221',
-        photo: '/utils/resources/images/head6.jpeg',
-        positionName: '班主任',
-        checked: false,
-      }
+      
     ],
     staffPhotoList:[ //联系人图片列表，方便预览
       
@@ -248,10 +49,38 @@ Page({
     // this.setData({
     //   checkType: options.checkType || ''
     // });
-    //初始化联系人列表
-    this.initstaffList();
+    
+    that = this
+    that.getContacts();
+    // setTimeout(function() {
+    //   //初始化联系人列表
+    //   that.initstaffList()
+    // }, 600)
+    that.initstaffList()
   },
 
+  getContacts: function() {
+    var data = app.globalData.contacts
+    // console.log(data)
+    if(data === null && data === undefined) {
+      app.contactsReadyCallback = res => {
+        data = res.data
+        console.log(data)
+      }
+    }
+    // console.log(data)
+    for (let index = 0; index < data.length; index++) {
+      that.setData({
+        [`staffList[${index}].id`]: data[index].id,
+        [`staffList[${index}].name`]: data[index].wx_name,
+        [`staffList[${index}].mobile`]: data[index].mobile,
+        [`staffList[${index}].photo`]: data[index].avatarUrl,
+        [`staffList[${index}].positionName`]: data[index].pid,
+        [`staffList[${index}].checked`]: false,
+        [`staffList[${index}].openId`]: data[index].wx_openid
+      });
+    }
+  },
   //全选或反选事件
   changeCheckAllType: function (e) {
     //console.log('changeCheckAllType e',e);
@@ -341,10 +170,6 @@ Page({
       for (var i in staffList){
         if (staffList[i].name.indexOf(searchText) != -1 
           || searchText.indexOf(staffList[i].name) != -1
-          || staffList[i]['HZPY'].indexOf(searchText) != -1
-          || searchText.indexOf(staffList[i]['HZPY']) != -1
-          || staffList[i].mobile.indexOf(searchText) != -1
-          || searchText.indexOf(staffList[i].mobile) != -1
           || staffList[i].positionName.indexOf(searchText) != -1
           || searchText.indexOf(staffList[i].positionName) != -1){
           staffList_search.push(staffList[i]);
@@ -363,8 +188,6 @@ Page({
       staffList_search: staffList_search,
     });
 
-    console.log('this.data.staffList_search',staffList_search)
-    
     //一些处理
     if (inputTimeout != null){
       clearTimeout(inputTimeout);
@@ -520,16 +343,17 @@ Page({
   //点击事件
   itemClick: function (item){
     var that = this;
+    // console.log(item)
     wx.showActionSheet({
-      itemList: ['拨打电话','复制号码','预览照片'],
+      itemList: ['发送消息','复制名称','预览照片'],
       success(res) {
-        if (res.tapIndex == 0 && item.mobile) {//拨打电话
-          wx.makePhoneCall({
-            phoneNumber: item.mobile,
+        if (res.tapIndex == 0) {//发送消息
+          wx.navigateTo({
+            url: '/pages/message/message?openId='+item.openId+'&nickName='+item.name+'&avatarUrl='+item.photo
           })
-        } else if (res.tapIndex == 1 && item.mobile) {//复制号码
+        } else if (res.tapIndex == 1 && item.name) {//复制号码
           wx.setClipboardData({
-            data: item.mobile,
+            data: item.name,
             success(res) {
               wx.getClipboardData({
                 success(res) {

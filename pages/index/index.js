@@ -10,9 +10,9 @@ Page({
     canIUse: wx.canIUse('button.open-type.getUserInfo')
   },
   // 事件处理函数
-  bindViewTap() {
+  goToChatPage() {
     wx.navigateTo({
-      url: '../logs/logs'
+      url: '/pages/message/message'
     })
   },
   onLoad() {
@@ -44,8 +44,9 @@ Page({
     }
   },
   getUserInfo(e) {
-    console.log(e)
+    // console.log(e)
     app.globalData.userInfo = e.detail.userInfo
+    app.socketStart()
     this.setData({
       userInfo: e.detail.userInfo,
       hasUserInfo: true
