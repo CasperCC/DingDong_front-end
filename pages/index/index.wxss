@@ -108,7 +108,6 @@
   width: 100%;
   height: 2rpx;
   background-color: rgb(230, 230, 230);
-  margin-top: 0rpx;
 }
 /*未读消息框*/
 .unread{

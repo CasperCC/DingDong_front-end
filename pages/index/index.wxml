@@ -1,59 +1,33 @@
 <!--私信消息列表-->
 <scroll-view scroll-y="true" class="message-list" enable-flex="true">
-  <!--示例用户1-->
-  <view class='user' bindtap='goToChatPage'>
-  <image class='header-icon' src='/utils/resources/images/head6.jpeg'></image>
-  <view class='user-content'>
-    <view class='msgline'>
-      <view class='apart'>
-      <view class='username'>
-        <text>测试1</text>
+  <block wx:for='{{newsList}}' wx:key='key'>
+    <!--示例用户1-->
+    <view class='user' bindtap='goToChatPage'>
+    <image class='header-icon' src='{{item.avatarUrl}}'></image>
+    <view class='user-content'>
+      <view class='msgline'>
+        <view class='apart'>
+        <view class='username'>
+          <text>{{item.nickName}}</text>
+        </view>
+        </view>
+        <view class='time'>
+          <view class='time-num'>{{item.lastTime}}</view>
+        </view>
       </view>
-      </view>
-      <view class='time'>
-        <view class='time-num'>9:36</view>
-      </view>
-    </view>
-    <view class='msgline'>
-      <view class='dialog'>
-      <text>你想要怎么拍呢？</text>
-      </view>
-      <view class='dialog-nums'>
-        <view class='bubble'>
-          <view class='num'>2</view>
+      <view class='msgline'>
+        <view class='dialog'>
+        <text>{{item.lastMsg}}</text>
+        </view>
+        <view class='dialog-nums'>
+          <view class='bubble'>
+            <view class='num'>{{item.unReadNum}}</view>
+          </view>
         </view>
       </view>
     </view>
-  </view>
-  </view>
-<!--分割线-->
-<view class='liner'></view>
-  <!--示例用户2-->
-  <view class='user' bindtap='goToChatPage'>
-  <image class='header-icon' src='https://b267.photo.store.qq.com/psb?/V13v0ZyH3zvYu7/9Ne*obpt0tAkfi3fZZij7.1VF4qT363gGq021zfYWQ0!/b/dAsBAAAAAAAA&bo=bgFuAQAAAAAFByQ!&rf=viewer_4'></image>
-  <view class='user-content'>
-    <view class='msgline'>
-    <view class='apart'>
-      <view class='username'>
-        <text>测试2</text>
-      </view>
     </view>
-      <view class='time'>
-        <view class='time-num'>8:16</view>
-      </view>
-    </view>
-    <view class='msgline'>
-      <view class='dialog'>
-      <text>约拍时间是这周六下午的两点钟</text>
-      </view>
-      <view class='dialog-nums'>
-        <view class='bubble'>
-          <view class='num'>1</view>
-        </view>
-      </view>
-    </view>
-  </view>
-  </view>
-  <!--分割线-->
-  <view class='liner'></view>
+    <!--分割线-->
+    <view class='liner'></view>
+  </block>
 </scroll-view>

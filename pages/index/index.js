@@ -7,7 +7,8 @@ Page({
     motto: 'Hello World',
     userInfo: {},
     hasUserInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo')
+    canIUse: wx.canIUse('button.open-type.getUserInfo'),
+    newsList: []
   },
   // 事件处理函数
   goToChatPage() {
@@ -42,6 +43,21 @@ Page({
         }
       })
     }
+    setTimeout(() => {
+      wx.request({
+        url: app.config.serverUrl + '/api/getNewsList',
+        method: 'POST',
+        data: { clientId: app.config.socket.id },
+        dataType: 'json',
+        success: res => {
+          this.setData({
+            newsList: res.data
+          })
+          // console.log(res)
+        }
+      })
+    }, 2000)
+    
   },
   getUserInfo(e) {
     // console.log(e)
