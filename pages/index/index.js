@@ -11,9 +11,11 @@ Page({
     newsList: []
   },
   // 事件处理函数
-  goToChatPage() {
+  goToChatPage(e) {
+    var item = e.currentTarget.dataset.item
+    // console.log(e)
     wx.navigateTo({
-      url: '/pages/message/message'
+      url: '/pages/message/message?openId='+item.openId+'&nickName='+item.nickName+'&avatarUrl='+item.avatarUrl
     })
   },
   onLoad() {
@@ -43,21 +45,28 @@ Page({
         }
       })
     }
-    setTimeout(() => {
-      wx.request({
-        url: app.config.serverUrl + '/api/getNewsList',
-        method: 'POST',
-        data: { clientId: app.config.socket.id },
-        dataType: 'json',
-        success: res => {
-          this.setData({
-            newsList: res.data
-          })
-          // console.log(res)
+  },
+  onShow() {
+    if (app.globalData.userInfo) {
+      setInterval(() => {
+        this.getNewsList()
+      }, 1000);
+    } else {
+      setTimeout(() => {
+        if (app.globalData.userInfo) {
+          setInterval(() => {
+            this.getNewsList()
+          }, 1000);
+        } else {
+          app.toastSuccess('您未登录或网络超时!')
+          setTimeout(() => {
+            wx.switchTab({
+              url: '/pages/mine/mine',
+            })
+          }, 2000)
         }
-      })
-    }, 2000)
-    
+      }, 2000)
+    }
   },
   getUserInfo(e) {
     // console.log(e)
@@ -66,6 +75,20 @@ Page({
     this.setData({
       userInfo: e.detail.userInfo,
       hasUserInfo: true
+    })
+  },
+  getNewsList() {
+    wx.request({
+      url: app.config.serverUrl + '/api/getNewsList',
+      method: 'POST',
+      data: { clientId: app.config.socket.id },
+      dataType: 'json',
+      success: res => {
+        this.setData({
+          newsList: res.data
+        })
+        // console.log(res.data)
+      }
     })
   }
 })

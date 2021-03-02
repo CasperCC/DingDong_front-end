@@ -66,7 +66,7 @@
   margin-left: 20rpx;
   display: flex;
   flex-direction: row;
-  width: 400rpx;
+  width: 350rpx;
 }
 .username{
   font-size: 36rpx;
@@ -74,12 +74,14 @@
   font-weight: 400;
 }
 .time{
-  display: flex;
-  width: 60rpx;
+  width: 250rpx;
   font-size: 24rpx;
   margin-top: 36rpx;
   color: #aeaeae;
-  margin-left: 140rpx;
+}
+.time-num{
+  text-align: right;
+  margin-right: 16rpx;
 }
 /*对话框消息内容*/
 .dialog{
@@ -91,7 +93,7 @@
 }
 /*气泡样式*/
 .bubble{
-  background-color: rgb(252, 36, 33);
+  background-color: rgb(251, 70, 70);
   border-radius: 80rpx;
   width: 40rpx;
   height: 40rpx;

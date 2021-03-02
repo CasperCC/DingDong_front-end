@@ -50,6 +50,7 @@ Page({
       userInfo: e.detail.userInfo,
       hasUserInfo: true
     })
+    app.onLaunch()
   },
 
 

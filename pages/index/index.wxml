@@ -2,7 +2,7 @@
 <scroll-view scroll-y="true" class="message-list" enable-flex="true">
   <block wx:for='{{newsList}}' wx:key='key'>
     <!--示例用户1-->
-    <view class='user' bindtap='goToChatPage'>
+    <view class='user' bindtap='goToChatPage' data-item='{{item}}'>
     <image class='header-icon' src='{{item.avatarUrl}}'></image>
     <view class='user-content'>
       <view class='msgline'>
@@ -19,7 +19,7 @@
         <view class='dialog'>
         <text>{{item.lastMsg}}</text>
         </view>
-        <view class='dialog-nums'>
+        <view class='dialog-nums' wx:if='{{item.unReadNum}}'>
           <view class='bubble'>
             <view class='num'>{{item.unReadNum}}</view>
           </view>

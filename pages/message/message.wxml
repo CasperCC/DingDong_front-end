@@ -2,9 +2,9 @@
 <view>
 <scroll-view scroll-y scroll-into-view='{{toView}}' scroll-with-animation='true' style='height: {{scrollHeight}};'>
   <block wx:key='key' wx:for='{{msgList}}' wx:for-index="index">
+    <view class="time" wx:if='{{item.time}}'>{{item.time}}</view>
 
-    <!-- 单个消息1 客服发出（左） -->
-    <!-- <view class="time">{{time}}</view> -->
+    <!-- 单个消息1 对方发出（左） -->
     <view wx:if='{{item.speaker=="opposite"}}' id='msg-{{index}}' style='display: flex; padding: 2vw 11vw 2vw 2vw;'>
       <view style='width: 11vw; height: 11vw;'>
         <image style='width: 11vw; height: 11vw; border-radius: 10rpx;' src='{{oppoHeadIcon}}'></image>

@@ -1,6 +1,6 @@
 // pages/message/message.js
 const app = getApp()
-var that, message, intervalId, socket, options
+var that, message, intervalId, socket, options, status
 var inputVal = ''
 var msgList = []
 var windowWidth = wx.getSystemInfoSync().windowWidth
@@ -10,74 +10,40 @@ var keyHeight = 0
 /**
  * 初始化数据
  */
-function initData(that) {
+function initData(that, options) {
   inputVal = ''
-  msgList = [{
-      speaker: 'opposite',
-      contentType: 'text',
-      content: '欢迎来到英雄联盟，敌军还有30秒到达战场，请做好准备！'
-    },
-    {
-      speaker: 'me',
-      contentType: 'text',
-      content: '我怕是走错片场了...'
-    },
-    {
-      speaker: 'me',
-      contentType: 'text',
-      content: '1'
-    },
-    {
-      speaker: 'me',
-      contentType: 'text',
-      content: '2'
-    },
-    {
-      speaker: 'me',
-      contentType: 'text',
-      content: '3'
-    },
-    {
-      speaker: 'me',
-      contentType: 'text',
-      content: '4'
-    },
-    {
-      speaker: 'me',
-      contentType: 'text',
-      content: '5'
-    },
-    {
-      speaker: 'me',
-      contentType: 'text',
-      content: '6'
-    },
-    {
-      speaker: 'me',
-      contentType: 'text',
-      content: '7'
-    },
-    {
-      speaker: 'me',
-      contentType: 'text',
-      content: '8'
-    },
-    {
-      speaker: 'me',
-      contentType: 'text',
-      content: '9'
-    },
-    {
-      speaker: 'me',
-      contentType: 'text',
-      content: '10'
-    },
-  ]
+  intervalId = setInterval(() => {
+    wx.request({
+      url: app.config.serverUrl + '/api/getChattingRecords',
+      method: 'POST',
+      data: {
+        clientId: app.config.socket.id,
+        opposite: options.openId
+      },
+      dataType: 'json',
+      success: res => {
+        that.setData({
+          msgList: res.data
+        })
+        msgList = res.data
+        if (!status) {
+          that.blur()
+        }
+        // that.setData({
+        //   scrollHeight: '100vh',
+        //   inputBottom: 0
+        // })
+        // that.setData({
+        //   toView: 'msg-' + (msgList.length - 1)
+        // })
+        // // that.blur() 
+      }
+    })
+  }, 1000);
+  
   that.setData({
-    msgList,
     inputVal
   })
-  that.blur()
 }
 Page({
   /**
@@ -97,18 +63,16 @@ Page({
     // 设置socket连接地址
     socket = app.config.socket
     that.socketStart(options)
-    initData(this)
-    var date = new Date()
+    initData(this, options)
     this.setData({
       myHeadIcon: app.globalData.userInfo.avatarUrl,
-      oppoHeadIcon: options.avatarUrl,
-      time: date.getHours() + ':' + date.getMinutes()
+      oppoHeadIcon: options.avatarUrl
     })
   },
   socketStart: function(options) {
-    // wx.setNavigationBarTitle({
-    //   title: options.nickName,
-    // })
+    wx.setNavigationBarTitle({
+      title: options.nickName,
+    })
     // 接收消息
     this.options = options
     socket.on('msg', function(msg) {
@@ -128,7 +92,8 @@ Page({
    * 获取聚焦
    */
   focus: function(e) {
-    keyHeight = e.detail.height;
+    status = 1
+    keyHeight = e.detail.height
     this.setData({
       scrollHeight: (windowHeight - keyHeight + 43) + 'px'
     });
@@ -140,6 +105,7 @@ Page({
 
   //失去聚焦(软键盘消失)
   blur: function(e) {
+    status = 0
     this.setData({
       scrollHeight: '100vh',
       inputBottom: 0
@@ -197,7 +163,7 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-    // clearInterval(intervalId)
+    clearInterval(intervalId)
     // console.log('onhide'+intervalId)
   },
 

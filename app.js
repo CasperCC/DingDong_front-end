@@ -1,76 +1,91 @@
 // app.js
-var io, socket, heartbeat, intervalId, that
+var that
 App({
   onLaunch() {
-    this.login().then(code => {
-      this.globalData.code = code
-      io = require('/utils/weapp.socket.io')
-      socket = io(this.config.serverUrl, { query: 'code='+code})
+    that = this
+    this.getUserInfo()
+    .then(() => {
+      return this.login()
+    })
+    .then(code => {
+      return this.socketStart(code)
+    })
+    .then(data => {
+      const {code, socket} = data
       this.config.socket = socket
-      heartbeat = io(this.config.serverUrl + this.config.heartBeat)
+      this.checkUserInfo(code, socket)
+    })
+    .then(() => {
+      this.getContacts()
+    })
+  },
+
+  /**
+   * 获取userinfo
+   */
+  getUserInfo: () => {
+    return new Promise((resolve, reject) => {
       wx.getSetting({
         success: res => {
           if (res.authSetting['scope.userInfo']) {
-            // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
             wx.getUserInfo({
               success: res => {
-                // 可以将 res 发送给后台解码出 unionId
-                this.globalData.userInfo = res.userInfo
-                // console.log(this.globalData.userInfo)
-                this.socketStart()
-                console.log(res.userInfo)
-                // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-                // 所以此处加入 callback 以防止这种情况
-                if (this.userInfoReadyCallback) {
-                  this.userInfoReadyCallback(res)
+                that.globalData.userInfo = res.userInfo
+                console.log(that.globalData.userInfo)
+                if (that.userInfoReadyCallback) {
+                  that.userInfoReadyCallback(res)
                 }
+                resolve(res.userInfo)
               }
             })
           }
         }
       })
     })
-    // console.log(this.globalData.code)
-    that = this
-    // 获取用户信息
-    
-    wx.request({
-      url: this.config.serverUrl + '/api/getContacts',
-      method: 'POST',
-      success(res) {
-        that.globalData.contacts = res.data
-        // console.log(that.globalData.contacts)
-        if(that.contactsReadyCallback) {
-          that.contactsReadyCallback(res)
-        }
-      }
+  },
+
+  /**
+   * socket连接
+   */
+  socketStart: code => {
+    return new Promise((resolve, reject) => {
+      const io = require('/utils/weapp.socket.io')
+      const socket = io(that.config.serverUrl, { query: 'code='+code })
+      resolve({code, socket})
     })
   },
-  socketStart: function() {
-    if (socket === undefined) {
-      that.onLaunch()
-    }
-    this.config.socket = socket
-    console.log(socket.id)
-    wx.request({
-      url: that.config.serverUrl + '/api/getUserInfo',
-      method: 'POST',
-      data: {
-        code: that.globalData.code,
-        nickName: that.globalData.userInfo.nickName,
-        avatarUrl: that.globalData.userInfo.avatarUrl,
-        clientId: that.config.socket.id
-      },
-      dataType: 'json',
-      header: {
-        'content-type': 'application/json'
-      },
-      success(data) {
-        console.log(data.data)
-      }
+
+  checkUserInfo: (code, socket) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        wx.request({
+          url: that.config.serverUrl + '/api/getUserInfo',
+          method: 'POST',
+          data: {
+            code: code,
+            nickName: that.globalData.userInfo.nickName,
+            avatarUrl: that.globalData.userInfo.avatarUrl,
+            clientId: socket.id
+          },
+          dataType: 'json',
+          header: {
+            'content-type': 'application/json'
+          },
+          success: data => {
+            console.log(data.data)
+          },
+          fail: err => {
+            console.log(err)
+          }
+        })
+      }, 400)
     })
   },
-  login: function () {
+
+  /**
+   * 获取登录唯一凭证code
+   */
+  login: () => {
     return new Promise((resolve, reject) => {
       wx.login({
         success: res => {
@@ -79,20 +94,51 @@ App({
       })
     })
   },
-    // 登录
-  toastSuccess: function (showTitle) {
+
+  /**
+   * 获取通讯录
+   */
+  getContacts: () => {
+    setTimeout(() => {
+      wx.request({
+        url: that.config.serverUrl + '/api/getContacts',
+        method: 'POST',
+        success(res) {
+          that.globalData.contacts = res.data
+          // console.log(res)
+          if(that.contactsReadyCallback) {
+            that.contactsReadyCallback(res)
+          }
+        },
+        fail: err => {
+          console.log(err)
+        }
+      })
+    }, 400)
+  },
+  
+  /**
+   * 弹窗提示
+   * @param {string} showTitle 
+   */
+  toastSuccess: showTitle => {
     wx.showToast({
       title: showTitle,
-      icon: 'none', //success loading none
+      icon: 'none',
       //image: '/images/notice.png', 
       duration: 3000,
     })
   },
+
+  // 小程序相关配置
   config: {
     serverUrl: 'http://127.0.0.1:7001',
+    // serverUrl: 'http://47.115.184.168:7001',
     heartBeat: '/heartbeat',
-    socket: null
+    socket: {}
   },
+
+  // 全局变量
   globalData: {
     code: null,
     userInfo: null,
