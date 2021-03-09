@@ -9,6 +9,7 @@ var that
 Page({
   data: {
     staffList:[],
+    newFriends:[],
     staffPhotoList:[/*联系人图片列表，方便预览*/],
     sortType: 1, //排序类型，默认1-以姓名排序 2-以职位排序
     searchFocus: false,
@@ -134,6 +135,8 @@ Page({
   initstaffList: function () {
     // 初始化联系人列表
     let staffList = this.data.staffList
+    // 初始化添加联系人申请列表
+    let newFriends = this.data.newFriends
     // 所有联系人照片
     let staffPhotoList = []
     staffList.map(item => {
@@ -144,11 +147,42 @@ Page({
       staffList: staffList,
       staffPhotoList: staffPhotoList,
       searchFocus: false,
-      searchText: ''
+      searchText: '',
+      newFriends: newFriends,
     })
     //初始化通讯录列表
     this.initBookList()
     wx.stopPullDownRefresh()
+  },
+
+  /**
+   * 初始化添加联系人申请列表
+   */
+  initnewFriends: function () {
+    wx.request({
+      url: app.config.serverUrl + '/api/getNewFriends',
+      method: 'POST',
+      data: {
+        clientId: app.config.socket.id
+      },
+      success: res => {
+        var data = res.data
+        for (let index = 0; index < data.length; index++) {
+          if (data[index].mobile == null) {
+            data[index].mobile = ''
+          }
+          that.setData({
+            [`newFriends[${index}].id`]: data[index].id,
+            [`newFriends[${index}].name`]: data[index].wx_name,
+            [`newFriends[${index}].mobile`]: data[index].mobile,
+            [`newFriends[${index}].photo`]: data[index].avatarUrl,
+            [`newFriends[${index}].positionName`]: data[index].pid,
+            [`newFriends[${index}].checked`]: false,
+            [`newFriends[${index}].openId`]: data[index].wx_openid
+          })
+        }
+      }
+    })
   },
 
   //初始化数据源，并初始化通讯录列表
