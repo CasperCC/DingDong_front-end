@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "alphabet-order-list": "/components/alphabet-order-list/alphabet-order-list"
+  }
+}

@@ -1,4 +1,3 @@
-// 联系人通讯录
 //获取应用实例
 const app = getApp()
 //引入汉字转拼音插件
@@ -11,27 +10,13 @@ Page({
   data: {
     staffList:[],
     staffPhotoList:[/*联系人图片列表，方便预览*/],
-    staffList_search: [/*搜索联系人列表*/
-      /**
-       * 示例：
-       * {
-       * id: 100,
-       * name: '安国庆',
-       * mobile: '13897391221',
-       * photo: '/utils/resources/images/head6.jpeg',
-       * positionName: '办公室职员',
-       * checked: false,
-      },
-       */
-    ],
     sortType: 1, //排序类型，默认1-以姓名排序 2-以职位排序
-    checkAllFlag: false, //是否开启全选反选操作功能，点击时才开启
-    checkAllType: false, //false-待全选 true-待反选
     searchFocus: false,
     searchText: '',
-    placeholder: '搜索', 
+    placeholder: '请输入昵称/手机号/邮箱', 
+    placeholder_active: '',
     searchHeight: 0, //搜索栏高度，需要传入通讯录插件
-    newFriendsPageUrl: '/pages/staffList/staffList?apply=true', //新的朋友页面Url
+    searchInput: ''
   },
 
   /**
@@ -39,33 +24,62 @@ Page({
    */
   onLoad: function (options) {
     that = this
-    this.getContacts()
     this.initstaffList()
-  },
-
-  getContacts: () => {
-    var data = app.globalData.contacts
-    // console.log(data)
-    if(data === null || data === undefined) {
-      app.contactsReadyCallback = res => {
-        data = res.data
-        console.log('callback: ' + data)
-      }
-    }
-    for (let index = 0; index < data.length; index++) {
-      if (data[index].mobile == null) {
-        data[index].mobile = ''
-      }
-      that.setData({
-        [`staffList[${index}].id`]: data[index].id,
-        [`staffList[${index}].name`]: data[index].wx_name,
-        [`staffList[${index}].mobile`]: data[index].mobile,
-        [`staffList[${index}].photo`]: data[index].avatarUrl,
-        [`staffList[${index}].positionName`]: data[index].pid,
-        [`staffList[${index}].checked`]: false,
-        [`staffList[${index}].openId`]: data[index].wx_openid
+    // console.log(options.apply)
+    if (options.apply) {
+      this.setData({
+        apply: true
+      })
+      wx.setNavigationBarTitle({
+        title: '新的朋友',
+      })
+    } else {
+      wx.setNavigationBarTitle({
+        title: '添加联系人',
       })
     }
+  },
+
+  searchInput: function(e) {
+    this.setData({
+      searchInput: e.detail.value
+    })
+  },
+
+  searchSubmit: function(e) {
+    // console.log(this.data.searchInput)
+    wx.request({
+      url: app.config.serverUrl + '/api/addContacts_search',
+      method: 'POST',
+      data: {
+        content: this.data.searchInput
+      },
+      dataType: 'json',
+      success: res => {
+        var data = res.data
+        for (let index = 0; index < data.length; index++) {
+          if (data[index].mobile == null) {
+            data[index].mobile = ''
+          }
+          that.setData({
+            [`staffList[${index}].id`]: data[index].id,
+            [`staffList[${index}].name`]: data[index].wx_name,
+            [`staffList[${index}].mobile`]: data[index].mobile,
+            [`staffList[${index}].photo`]: data[index].avatarUrl,
+            [`staffList[${index}].positionName`]: data[index].pid,
+            [`staffList[${index}].checked`]: false,
+            [`staffList[${index}].openId`]: data[index].wx_openid
+          })
+        }
+        if (data.length == 0) {
+          this.setData({
+            staffList: null
+          })
+          app.toastSuccess('无匹配结果')
+        }
+        // console.log(this.data.staffList)
+      }
+    })
   },
 
   /**
@@ -75,26 +89,16 @@ Page({
   changeSortType: function (e) {
     var that = this
     wx.showActionSheet({
-      itemList: ['添加联系人','以姓名排序','以职位排序'],
+      itemList: ['以姓名排序','以职位排序'],
       success(res) {
         // console.log(res.tapIndex)
-        if (res.tapIndex == 0) {
-          wx.navigateTo({
-            url: '/pages/staffList/staffList',
-          })
-        } else {
           if (res.tapIndex != that.data.sortType){
             that.setData({
               sortType: res.tapIndex,
             })
             //重新初始化
             that.onPullDownRefresh()
-          }
-        }
-        
-      },
-      fail(res) {
-        console.log(res.errMsg)
+          }  
       }
     })
     
@@ -107,29 +111,11 @@ Page({
     this.setData({
       searchFocus: !this.data.searchFocus,
       searchText: '',
-      staffList_search: []
+      staffList: null
     })
     if (inputTimeout != null) {
       clearTimeout(inputTimeout)
       inputTimeout = null
-    }
-  },
-
-  /**
-   * 搜索内容输入变化
-   * @param {*} e 
-   */
-  searchTextInput: function(e) {
-    this.setData({
-      searchText: e.detail.value
-    })
-    
-    //即时搜索
-    if (inputTimeout == null){
-      var that = this
-      inputTimeout = setTimeout(function () {
-        that.searchSubmit(e)
-      }, 1000)
     }
   },
 
@@ -138,43 +124,8 @@ Page({
     //console.log('searchClearTap e', e)
     this.setData({
       searchText: '',
-      staffList_search: [],
+      staffList: []
     })
-  },
-
-  //开始搜索
-  searchSubmit: function () {
-    //console.log('searchSubmit e', e)
-    var staffList_search = []
-    var staffList = this.data.staffList
-    var searchText = this.data.searchText
-    //console.log('searchSubmit searchText', searchText)
-    if (this.data.searchText.length > 0){
-      //本地搜索，比较姓名、拼音、手机号、职位
-      for (var i in staffList){
-        if (staffList[i].name.indexOf(searchText) != -1 
-          || searchText.indexOf(staffList[i].name) != -1
-          || staffList[i].positionName.indexOf(searchText) != -1
-          || searchText.indexOf(staffList[i].positionName) != -1){
-          staffList_search.push(staffList[i])
-        }
-      }
-      if (staffList_search.length == 0){
-        this.setData({
-          staffList_search: null
-        })
-        app.toastSuccess('无匹配结果')
-      }
-    }
-    //搜索结果
-    this.setData({
-      staffList_search: staffList_search,
-    })
-    //一些处理
-    if (inputTimeout != null){
-      clearTimeout(inputTimeout)
-      inputTimeout = null
-    }
   },
 
   /**
@@ -193,8 +144,7 @@ Page({
       staffList: staffList,
       staffPhotoList: staffPhotoList,
       searchFocus: false,
-      searchText: '',
-      staffList_search: [],
+      searchText: ''
     })
     //初始化通讯录列表
     this.initBookList()
@@ -247,34 +197,12 @@ Page({
    * @param {*} item
    */
   itemClick: function (item) {
-    var that = this
     // console.log(item)
     wx.showActionSheet({
-      itemList: ['发送消息','复制名称','预览照片'],
+      itemList: ['添加到通讯录'],
       success(res) {
         if (res.tapIndex == 0) {//发送消息
-          wx.navigateTo({
-            url: '/pages/message/message?openId='+item.openId+'&nickName='+item.name+'&avatarUrl='+item.photo
-          })
-        } else if (res.tapIndex == 1 && item.name) {//复制号码
-          wx.setClipboardData({
-            data: item.name,
-            success(res) {
-              wx.getClipboardData({
-                success(res) {
-                  app.toastSuccess(res.data + '复制成功')
-                }
-              })
-            }
-          })
-        } else if (res.tapIndex == 2 && item.photo) {//预览图片
-          wx.previewImage({
-            current: item.photo,
-            urls: that.data.staffPhotoList,
-            fail: function (res) {
-              //console.log('previewImage fail', res)
-            },
-          })
+          
         }
       },
       fail(res) {
@@ -336,8 +264,7 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-    //初始化联系人列表
-    this.initstaffList()
+
   },
 
   /**

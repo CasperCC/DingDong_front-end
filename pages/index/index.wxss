@@ -1,38 +1,3 @@
-.onTabLine{
-  width: 120rpx;
-  height: 5rpx;
-  background-color:#4074DD;
-  margin-top:15rpx;
-}
-.line{
-  width: 750rpx;
-  height: 2rpx;
-  background-color: #F2F2F2;
-  margin: 0rpx auto 0 auto;
-}
-.message,.notify{
-  display: flex;
-  flex-direction: row;
-  font-size:36rpx;
-  margin-top: 20rpx;
-  width: 120rpx;
-  color:#CDCDCD;
- 
-}
-.message{
-  margin-left: 200rpx;
-}
-.notify{
-  margin-left: 150rpx;
-}
-.active{
-  color:#4074DD;
-}
-.selectTab{
-  position: fixed;
-  background-color: #fff;
-  z-index: 100;
-}
 /*私信消息*/
 .message-list{
   background-color:#f2f2f2;
@@ -105,16 +70,9 @@
   font-weight: 500;
   margin-left: 12rpx;
 }
-/*最帅的分割线*/
+/*分割线*/
 .liner{
   width: 100%;
   height: 2rpx;
   background-color: rgb(230, 230, 230);
-}
-/*未读消息框*/
-.unread{
-  margin-top: 16rpx;
-  font-size: 26rpx;
-  color: #aeaeae;
-  text-align: center;
 }

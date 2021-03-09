@@ -56,7 +56,7 @@ Page({
         if (app.globalData.userInfo) {
           setInterval(() => {
             this.getNewsList()
-          }, 1000);
+          }, 1000)
         } else {
           app.toastSuccess('您未登录或网络超时!')
           setTimeout(() => {
@@ -77,7 +77,7 @@ Page({
       hasUserInfo: true
     })
   },
-  getNewsList() {
+  getNewsList(id) {
     wx.request({
       url: app.config.serverUrl + '/api/getNewsList',
       method: 'POST',
@@ -87,6 +87,7 @@ Page({
         this.setData({
           newsList: res.data
         })
+        // console.log(app.config.socket.id)
         // console.log(res.data)
       }
     })

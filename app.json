@@ -4,7 +4,9 @@
     "pages/mine/mine",
     "pages/message/message",
     "pages/logs/logs",
-    "pages/contacts/contacts"
+    "pages/contacts/contacts",
+    "pages/staffList/staffList",
+    "pages/newFriends/newFriends"
   ],
   "window": {
     "backgroundTextStyle": "light",

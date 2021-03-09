@@ -50,7 +50,24 @@ App({
   socketStart: code => {
     return new Promise((resolve, reject) => {
       const io = require('/utils/weapp.socket.io')
-      const socket = io(that.config.serverUrl, { query: 'code='+code })
+      const socket = io(that.config.serverUrl, { query: 'code='+code, 'reconnect': true })
+      socket.on('reconnect', data => {
+        console.log('reconnect')
+        that.login().then(code => {
+          socket.emit('reconnection', {
+            code: code
+          })
+        })
+      })
+      socket.on('error', err => {
+        console.log(err)
+      })
+      socket.on('connect', data => {
+        console.log('connect')
+      })
+      socket.on('disconnect', res => {
+        console.log('disconnect')
+      })
       resolve({code, socket})
     })
   },
@@ -58,6 +75,7 @@ App({
   checkUserInfo: (code, socket) => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
+        console.log(socket.id)
         wx.request({
           url: that.config.serverUrl + '/api/getUserInfo',
           method: 'POST',

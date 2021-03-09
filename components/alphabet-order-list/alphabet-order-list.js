@@ -58,13 +58,22 @@ Component({
     checkValue: String, //选中后返回的值的key
     checkStatus: String, //选中状态的key
     checkIcon: String, //右侧icon图标提示，如待审核icon
+    addSearch:{ //是否为添加好友时的搜索列表
+      type: Boolean,
+      value: false,
+      observer: function (newVal, oldVal) {
+        this.setData({
+          addSearch: newVal
+        })
+      }
+    },
     showPoundSign: { //字母导航列表是否显示‘#’号
       type: Boolean,
       value: false,
       observer: function (newVal, oldVal) {
-        console.log(newVal)
-        console.log(oldVal)
-        console.log('2')
+        // console.log(newVal)
+        // console.log(oldVal)
+        // console.log('2')
         var alphabet = this.data.alphabet
         if (newVal) {
           if (alphabet.length == 26) {
@@ -84,6 +93,15 @@ Component({
 
       }
     },
+    newFriendsPageUrl: { //新的朋友页面Url
+      type: String,
+      value: '',
+      observer: function (newVal, oldVal) {
+        this.setData({
+          newFriendsPageUrl: newVal
+        })
+      }
+    }
   },
 
   //内部数据源
@@ -94,8 +112,10 @@ Component({
     letterHeight: 0, //每个字母的高度
     dataSource: [], //数据源
     checkType: '', //选择类型，checkBox-多选类型 radio-单选类型 空字符串-常规类型
+    addSearch: false, //是否为添加好友时的搜索列表
     bottomHeight: 0, //是否需要底部留空，默认0，使用于有tabbar里的页面使用
     searchHeight: 0, //搜索栏高度，无搜索栏则为0，有则需要设置，否则点击右侧letter不准确
+    newFriendsPageUrl: '', //新的朋友页面Url
   },
 
   //在组件在视图层布局完成后执行
@@ -212,6 +232,12 @@ Component({
 
     _itemtap: function (e) {
       this.triggerEvent('itemtap', { 'item': e.currentTarget.dataset.item }, {})
+    },
+
+    _newFriends: function () {
+      wx.navigateTo({
+        url: this.data.newFriendsPageUrl
+      })
     },
 
     _copyphonekey: function (e) {
