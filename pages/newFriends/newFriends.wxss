@@ -1,1 +1,102 @@
 /* pages/newFriends/newFriends.wxss */
+@font-face {
+  font-family: 'webfont';
+  font-display: swap;
+  src: url('//at.alicdn.com/t/webfont_wa4eof5fw69.eot'); /* IE9*/
+  src: url('//at.alicdn.com/t/webfont_wa4eof5fw69.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('//at.alicdn.com/t/webfont_wa4eof5fw69.woff2') format('woff2'),
+  url('//at.alicdn.com/t/webfont_wa4eof5fw69.woff') format('woff'), /* chrome、firefox */
+  url('//at.alicdn.com/t/webfont_wa4eof5fw69.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+  url('//at.alicdn.com/t/webfont_wa4eof5fw69.svg#NotoSansHans-DemiLight') format('svg'); /* iOS 4.1- */
+}
+/*私信消息*/
+.message-list{
+  background-color:#f2f2f2;
+  display: flex;
+  flex-direction: column;
+}
+.user{
+  height: 156rpx;
+  margin-left: 20rpx;
+  display: flex;
+  flex-direction: row;
+}
+.user:active{
+  background-color: #d8d8d8;
+}
+.user-content{
+  margin-left: 20rpx;
+  display: flex;
+  flex-direction: column;
+}
+.header-icon{
+  width: 104rpx;
+  height: 104rpx;
+  border-radius: 10rpx;
+  margin-left: 20rpx;
+  margin-top: 26rpx;
+}
+.msgline{
+  width: 400rpx;
+  display: flex;
+  flex-direction: row;
+}
+.apart{
+  margin-left: 20rpx;
+  display: flex;
+  flex-direction: row;
+  width: 300rpx;
+}
+.username{
+  font-size: 36rpx;
+  margin-top: 26rpx;
+  font-weight: 400;
+}
+.time{
+  width: 250rpx;
+  font-size: 24rpx;
+  margin-top: 36rpx;
+  color: #aeaeae;
+}
+.time-num{
+  text-align: right;
+  margin-right: 16rpx;
+}
+.added{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 150rpx;
+}
+.added_text{
+  color: #888888;
+  font-size: 34rpx;
+}
+/*对话框消息内容*/
+.dialog{
+  width: 545rpx;
+  font-size: 34rpx;
+  color: #808080;
+  margin-left: 20rpx;
+  margin-top: 15rpx;
+}
+/*气泡样式*/
+.bubble{
+  background-color: rgb(251, 70, 70);
+  border-radius: 80rpx;
+  width: 40rpx;
+  height: 40rpx;
+  margin-top: 20rpx;
+}
+.bubble .num{
+  font-size: 28rpx;
+  color: #ffffff;
+  font-weight: 500;
+  margin-left: 12rpx;
+}
+/*分割线*/
+.liner{
+  width: 100%;
+  height: 2rpx;
+  background-color: rgb(230, 230, 230);
+}

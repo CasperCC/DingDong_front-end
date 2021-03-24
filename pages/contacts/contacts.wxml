@@ -17,13 +17,10 @@
 
 <view style="height:{{searchHeight}}px;"></view>
 
-
-
 <block wx:if="{{staffList_search.length > 0}}">
   <alphabet-order-list source="{{staffList_search}}" groupKey="HZPY" imageKey="photo" textKey="name" phoneKey="mobile" positionKey="positionName" checkType="{{checkType}}" searchHeight="{{searchHeight}}" catchitemtap="itemClickEvent" showPoundSign="true" />
 </block>
 <block wx:else>
-  
   <alphabet-order-list source="{{staffList}}" groupKey="HZPY" imageKey="photo" textKey="name" phoneKey="mobile" positionKey="positionName" checkType="{{checkType}}" searchHeight="{{searchHeight}}" catchitemtap="itemClickEvent" showPoundSign="true" newFriendsPageUrl="{{newFriendsPageUrl}}" />
 </block>
 

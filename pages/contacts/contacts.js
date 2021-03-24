@@ -31,7 +31,7 @@ Page({
     searchText: '',
     placeholder: '搜索', 
     searchHeight: 0, //搜索栏高度，需要传入通讯录插件
-    newFriendsPageUrl: '/pages/staffList/staffList?apply=true', //新的朋友页面Url
+    newFriendsPageUrl: '/pages/newFriends/newFriends', //新的朋友页面Url
   },
 
   /**

@@ -1,2 +1,31 @@
 <!--pages/newFriends/newFriends.wxml-->
-<text>pages/newFriends/newFriends.wxml</text>
+<scroll-view scroll-y="true" class="message-list" enable-flex="true">
+  <block wx:for='{{applyList}}' wx:key='key'>
+    <!--示例用户1-->
+    <view class='user' bindtap='goToUserInfomation' data-item='{{item}}'>
+      <image class='header-icon' src='{{item.avatarUrl}}'></image>
+      <view class='user-content'>
+        <view class='msgline'>
+          <view class='apart'>
+            <view class='username'>
+              <text>{{item.wx_name}}</text>
+            </view>
+          </view>
+        </view>
+        <view class='msgline'>
+          <view class='dialog'>
+            <text>{{item.pid}}</text>
+          </view>
+        </view>
+      </view>
+      <view class='added'>
+        <text wx:if='{{item.is_applicant == 1}}' class='added_text'>已申请</text>
+        <text wx:elif='{{item.status == 1}}' class='added_text'>已添加</text>
+        <text wx:elif='{{item.status == 2}}' class='added_text'>已拒绝</text>
+        <text wx:else class='added_text'>去验证</text>
+      </view>
+    </view>
+    <!--分割线-->
+    <view class='liner'></view>
+  </block>
+</scroll-view>

@@ -1,0 +1,237 @@
+/* pages/userInfomation/userInfomation.wxss */
+page{/*页面背景—————统一浅灰*/
+  background-color: #ededed;
+}
+.userInformation {/*头像&微信名称*/
+  display: flex;
+  flex-direction: row;
+  background-color: #ffffff;
+}
+.userInfomation-avatar {/*头像*/ 
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  width: 160rpx;
+  height: 160rpx;
+  margin-top: 90rpx;
+  margin-left: 50rpx;
+  border-color: #ffffff;
+  border-radius: 10%;
+}
+.msgLine {
+  display: flex;
+  flex-direction: column;
+}
+.userInformation-nickname {/*昵称*/
+  color: #000000;
+  font-size: 22px;
+  font-weight: bold;
+  width: 320rpx;
+  height: 120px;
+  line-height: 120px;
+  margin-left: 40rpx;
+}
+
+.blackList {
+  text-align: center;
+  background-color: #ededed;
+  color: #6d6d6d;
+  font-size: 28rpx;
+}
+
+.blackList:active {
+  color: black;
+}
+
+.section {
+  background-color: #ededed;
+  border-radius: 20rpx;
+  border: 1rpx solid #adadad;
+  width: 90%;
+}
+
+.verification {
+  display: flex;
+  justify-content: center;
+  background-color: #ffffff;
+  width: 100%;
+}
+
+.verifiText {
+  font-size: 35rpx;
+  color: #6d6d6d;
+  margin-left: 20rpx;
+  margin-top: 30rpx;
+}
+
+.verifiButton {
+  width: 80rpx;
+  font-size: 37rpx;
+  color: #424fff;
+  margin-top: 20rpx;
+  margin-bottom: 20rpx;
+  margin-left: 20rpx;
+}
+
+.verifiButton:active {
+  color: #000ba7
+}
+
+.whitedivide {/*白色分割线*/
+  height: 1px;
+  background-color: #ffffff;
+  width: 1rpx;
+  position:relative;
+  top: 0px;
+}
+
+.graydivide {/*灰色分割条*/
+  height: 10px;
+  background-color: #ededed;
+  position:relative;
+  top: 0px;
+}
+
+.function {
+  width: 100%;
+  height: 120rpx;
+  background-color: #ffffff;
+  margin-top: 0rpx;
+  overflow: hidden;
+  display: flex;/**/
+}
+
+.function:active {
+  background-color: #d8d8d8;
+}
+
+.functioninformation {/*左边动作图标&文字说明*/
+  display: flex;
+  width: 100%;
+}
+
+.left-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 14px;
+}
+
+.icon-picture {/*图标*/
+  display: flex;
+  width: 24px;
+  height: 24px;
+}
+
+.text {/*文字*/
+  font-size: 17px;
+  font-style: normal;
+  font-weight: normal;
+  width: 150rpx;
+  position: relative;
+  left: 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #000000;
+}
+
+.description {
+  font-size: 17px;
+  font-style: normal;
+  font-weight: normal;
+  width: 200rpx;
+  position: relative;
+  left: 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #5a5a5a;
+}
+
+.toast-box {
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+}
+
+
+.toastbg {
+  opacity: 0.2;
+  background-color: black;
+  position: absolute;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.showToast {
+  position: absolute;
+  opacity: 1;
+  width: 70%;
+  margin-left: 15%;
+  margin-top: 40%;
+}
+
+.toast-title {
+  padding-left: 5%;
+  background-color: #ededed;
+  color: black;
+  padding-top: 2vh;
+  padding-bottom: 2vh;
+  border-top-right-radius: 16rpx;
+  border-top-left-radius: 16rpx;
+}
+
+.toast-main {
+  padding-top: 2vh;
+  padding-bottom: 2vh;
+  background-color: white;
+  text-align: center;
+}
+
+.toast-input {
+  margin-left: 5%;
+  margin-right: 5%;
+  border: 1px solid #ddd;
+  padding-left: 2vh;
+  padding-right: 2vh;
+  padding-top: 1vh;
+  padding-bottom: 1vh;
+}
+
+.toast-button {
+  display: flex;
+}
+
+.button1 {
+  width: 50%;
+}
+
+.button2 {
+  width: 50%;
+}
+
+.button1 button {
+  background-color: white;
+  color: #6d6d6d;
+  border-radius: 0px;
+  border-bottom-left-radius: 16rpx;
+}
+
+.button2 button{
+  background-color: white;
+  color: rgb(28, 184, 77);
+  border-radius: 0px;
+  border-bottom-right-radius: 16rpx;
+}
+
+.button1 button:active{
+  background-color: #ededed;
+}
+
+.button2 button:active{
+  background-color: #ededed;
+}

@@ -67,7 +67,7 @@ Page({
             [`staffList[${index}].name`]: data[index].wx_name,
             [`staffList[${index}].mobile`]: data[index].mobile,
             [`staffList[${index}].photo`]: data[index].avatarUrl,
-            [`staffList[${index}].positionName`]: data[index].pid,
+            [`staffList[${index}].positionName`]: data[index].hierarchy,
             [`staffList[${index}].checked`]: false,
             [`staffList[${index}].openId`]: data[index].wx_openid
           })
@@ -235,8 +235,10 @@ Page({
     wx.showActionSheet({
       itemList: ['添加到通讯录'],
       success(res) {
-        if (res.tapIndex == 0) {//发送消息
-          
+        if (res.tapIndex == 0) {//添加联系人
+          wx.navigateTo({
+            url: '/pages/sendVerification/sendVerification?oppOpenId='+item.openId
+          })
         }
       },
       fail(res) {

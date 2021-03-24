@@ -6,7 +6,9 @@
     "pages/logs/logs",
     "pages/contacts/contacts",
     "pages/staffList/staffList",
-    "pages/newFriends/newFriends"
+    "pages/newFriends/newFriends",
+    "pages/userInfomation/userInfomation",
+    "pages/sendVerification/sendVerification"
   ],
   "window": {
     "backgroundTextStyle": "light",

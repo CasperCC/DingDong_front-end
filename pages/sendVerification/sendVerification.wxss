@@ -1,0 +1,64 @@
+/* pages/sendVerification/sendVerification.wxss */
+@font-face {
+  font-family: 'webfont';
+  font-display: swap;
+  src: url('//at.alicdn.com/t/webfont_xu0m7vhgdtl.eot'); /* IE9*/
+  src: url('//at.alicdn.com/t/webfont_xu0m7vhgdtl.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('//at.alicdn.com/t/webfont_xu0m7vhgdtl.woff2') format('woff2'),
+  url('//at.alicdn.com/t/webfont_xu0m7vhgdtl.woff') format('woff'), /* chrome、firefox */
+  url('//at.alicdn.com/t/webfont_xu0m7vhgdtl.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+  url('//at.alicdn.com/t/webfont_xu0m7vhgdtl.svg#思源黑体-粗') format('svg'); /* iOS 4.1- */
+}
+page {
+  background-color: #ededed;
+}
+.whitedivide {/*白色分割线*/
+  height: 1px;
+  background-color: #ffffff;
+  width: 1rpx;
+  position:relative;
+  top: 0px;
+}
+.graydivide {/*灰色分割条*/
+  height: 10px;
+  background-color: #ededed;
+  position:relative;
+  top: 0px;
+}
+.title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  font-family: webfont;
+  font-size: 40rpx;
+}
+.input_box {
+  display: flex;
+  flex-direction: column;
+}
+.verification {
+  font-size: 25rpx;
+  width: 100%;
+  margin-left: 80rpx;
+  margin-bottom: 10rpx;
+  color: #6d6d6d
+}
+.area {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.verifiText {
+  font-size: 27rpx;
+  background-color: #ffffff;
+  border-radius: 10rpx;
+  border: 1rpx solid #adadad;
+  padding: 15rpx 15rpx;
+  height: 180rpx;
+  width: 75%;
+}
+.button {
+  display: flex;
+  justify-content: center;
+}

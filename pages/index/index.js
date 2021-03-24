@@ -77,7 +77,7 @@ Page({
       hasUserInfo: true
     })
   },
-  getNewsList(id) {
+  getNewsList() {
     wx.request({
       url: app.config.serverUrl + '/api/getNewsList',
       method: 'POST',

@@ -1,0 +1,19 @@
+<!--pages/sendVerification/sendVerification.wxml-->
+<view class="graydivide" style="height:120rpx"></view>
+<view class="title">申请添加朋友</view>
+<view class="graydivide" style="height:90rpx"></view>
+<view class="input_box">
+  <view class="verification">发送验证消息</view>
+  <view class="area">
+    <textarea class="verifiText" type="text" placeholder="请输入验证消息" bindinput="setVerification" auto-focus="true" />
+  </view>
+</view>
+<view class="graydivide" style="height:90rpx"></view>
+<view class="input_box">
+  <view class="verification">设置备注</view>
+  <view class="area">
+    <textarea class="verifiText" type="text" placeholder=""  style="height:70rpx" bindinput="setNickName" />
+  </view>
+</view>
+<view class="graydivide" style="height:120rpx"></view>
+<button type="primary" class="button" bindtap="sendVerification" style="width:79%" bindtap="submit" disabled="{{disabled}}">发送添加朋友申请</button>

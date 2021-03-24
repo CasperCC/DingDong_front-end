@@ -77,7 +77,7 @@ App({
       setTimeout(() => {
         console.log(socket.id)
         wx.request({
-          url: that.config.serverUrl + '/api/getUserInfo',
+          url: that.config.serverUrl + '/api/checkUserInfo',
           method: 'POST',
           data: {
             code: code,
@@ -160,6 +160,6 @@ App({
   globalData: {
     code: null,
     userInfo: null,
-    contacts: null
+    contacts: null,
   }
 })

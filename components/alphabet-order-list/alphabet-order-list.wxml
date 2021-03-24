@@ -77,7 +77,7 @@
       </block>
       <!--常规模式-->
       <block wx:else>
-        <view class='tag-item' style="background-color: #ffe5ac;" bindtap='_newFriends'>
+        <view class='tag-item' bindtap='_newFriends'>
           <image class='item-image' src='/utils/resources/icons/newFriends.png'></image>
           <view class='item-text'>
             <view>新的朋友</view>
