@@ -78,7 +78,7 @@ Page({
     socket.on('msg', function(msg) {
       msgList.push({
         speaker: 'opposite',
-        contentType: 'text',
+        contentType: 1,
         content: msg
       })
       this.setData({
@@ -122,7 +122,7 @@ Page({
     if (e.detail.value) {
       msgList.push({
         speaker: 'me',
-        contentType: 'text',
+        contentType: 1,
         content: e.detail.value
       })
       inputVal = ''
@@ -133,9 +133,134 @@ Page({
       })
       socket.emit('sendMsg', {
         target: that.options.openId,
-        msg: e.detail.value
+        msg: e.detail.value,
+        type: 1
       })
     }
+  },
+
+  /**
+   * 发送图片/文件按钮
+   * @param {any} e 
+   */
+  sendContent: function (e) {
+    var that = this
+    wx.showActionSheet({
+      itemList: ['发送图片', '发送文件'],
+      success: function (res) {
+        if (res.tapIndex == 0) {
+          that.sendImage()
+        } else {
+          that.sendFile()
+        }
+      }
+    })
+  },
+
+  sendImage: function () {
+    var that = this
+    that.getUploadParams().then(options => {
+      wx.chooseImage({
+        count: 9,
+        sizeType: ['original', 'compressed'],
+        sourceType: ['album', 'camera'],
+        success: res => {
+          // tempFilePath可以作为img标签的src属性显示图片
+          const tempFilePaths = res.tempFilePaths
+          for (let i = 0; i < tempFilePaths.length; i++) {
+            that.uploadToOss(options, tempFilePaths[i], 2).then(url => {
+              console.log(url)
+              msgList.push({
+                speaker: 'me',
+                contentType: 2,
+                content: url
+              })
+              that.setData({
+                msgList: msgList,
+                toView: 'msg-' + (msgList.length - 1)
+              })
+            })
+            
+          }
+        }
+      })
+    })
+  },
+
+  sendFile: function () {
+    
+  },
+
+  uploadToOss: function (options, tempFilePaths, type) {
+    return new Promise((resolve) => {
+      var d = new Date();
+      var date = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()+'/';
+      const path = type === 2 ? app.config.imageOssPath : app.config.fileOssPath
+      const key = path+date+tempFilePaths.substring(11, 59)
+      wx.uploadFile({
+        filePath: tempFilePaths,
+        name: 'file',
+        url: app.config.uploadUrl,
+        formData: {
+          key,
+          policy: options.policy,
+          OSSAccessKeyId: options.OSSAccessKeyId,
+          signature: options.signature
+        },
+        success: res => {
+          if (res.statusCode === 204) {
+            socket.emit('sendMsg', {
+              target: that.options.openId,
+              msg: key,
+              type: 2
+            })
+            app.toastSuccess('发送成功！')
+            that.getOssUrl(key).then(url => {
+              resolve(url)
+            })
+          }
+        },
+        fail: err => {
+          console.log(err)
+        }
+      })
+    })
+    
+  },
+
+  /**
+   * 获取签名参数
+   */
+  getUploadParams: function () {
+    return new Promise((resolve, reject) => {
+      wx.request({
+        url: app.config.serverUrl + '/api/getUploadParams',
+        method: 'POST',
+        success: res => {
+          resolve(res.data)
+        }
+      })
+    })
+  },
+
+  /**
+   * 获取文件临时链接
+   * @param {string} key 文件在OSS的位置
+   */
+  getOssUrl: function (key) {
+    return new Promise((resolve, reject) => {
+      wx.request({
+        url: app.config.serverUrl + '/api/getOssUrl',
+        method: 'POST',
+        data: {
+          objectName: key
+        },
+        dataType: 'json',
+        success: res => {
+          resolve(res.data)
+        }
+      })
+    })
   },
 
   /**
@@ -156,7 +281,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    
+
   },
 
   /**

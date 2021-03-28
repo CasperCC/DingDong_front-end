@@ -17,10 +17,18 @@
 
     <!-- 单个消息2 用户发出（右） -->
     <view wx:else id='msg-{{index}}' style='display: flex; justify-content: flex-end; padding: 2vw 2vw 2vw 11vw;'>
-      <view class='rightMsg'>{{item.content}}</view>
-      <view style='width: 4vw; height: 11vw; margin-right: 0.5vw; display: flex; align-items: center; z-index: 9;'>
-        <image style='width: 4vw;' src='/utils/resources/images/right_msg.png' mode='widthFix'></image>
-      </view>
+      <block wx:if="{{item.contentType === 1}}">
+        <view class='rightMsg'>{{item.content}}</view>
+        <view style='width: 4vw; height: 11vw; margin-right: 0.5vw; display: flex; align-items: center; z-index: 9;'>
+          <image style='width: 4vw;' src='/utils/resources/images/right_msg.png' mode='widthFix'></image>
+        </view>
+      </block>
+      <block wx:elif="{{item.contentType === 2}}">
+        <view class="imgMsgContent">
+          <image class="imgMsg" src="{{item.content}}"></image>
+        </view>
+      </block>
+      <block wx:else></block>
       <view style='width: 11vw; height: 11vw;'>
         <image style='width: 11vw; height: 11vw; border-radius: 10rpx;' src='{{myHeadIcon}}'></image>
       </view>
@@ -32,7 +40,8 @@
 </scroll-view>
 
 <view class='inputRoom' style='bottom: {{inputBottom}}'>
-  <image style='width: 7vw; margin-left: 3.2vw;' src='/utils/resources/icons/voice.png' mode='widthFix'></image>
+  <image style='width: 8vw; margin-left: 3.2vw;' src='/utils/resources/icons/voice.png' mode='widthFix'></image>
   <input bindconfirm='sendClick' adjust-position='{{false}}' value='{{inputVal}}' confirm-type='send' bindfocus='focus' bindblur='blur' confirm-hold='true'></input>
+  <image style='width: 8vw; margin-left: 2.2vw; margin-right:2.2vw;' src='/utils/resources/icons/add.png' mode='widthFix' bindtap='sendContent'></image>
 </view>
 </view>

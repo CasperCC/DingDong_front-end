@@ -152,6 +152,9 @@ App({
   config: {
     serverUrl: 'http://127.0.0.1:7001',
     // serverUrl: 'http://47.115.184.168:7001',
+    uploadUrl: 'https://oss.cochan.tech',
+    imageOssPath: 'DingDong/images/',
+    fileOssPath: 'DingDong/files/',
     heartBeat: '/heartbeat',
     socket: {}
   },

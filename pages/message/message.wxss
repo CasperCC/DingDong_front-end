@@ -48,6 +48,16 @@ input {
   z-index: 10;
 }
 
+.imgMsgContent {
+  padding: 2vw 2.5vw;
+  border-radius: 10rpx;
+  z-index: 10;
+}
+
+.imgMsg {
+  max-width: 400rpx;
+}
+
 .time {
   padding-top: 5rpx;
   padding-bottom: 5rpx;
