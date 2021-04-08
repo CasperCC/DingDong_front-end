@@ -1,0 +1,52 @@
+/* pages/login/login.wxss */
+#container{
+  margin: 0rpx,10rpx,0rpx,10rpx;
+}
+.text{
+  font-weight:700;
+  font-size:1.5rem;
+  margin-top: 100rpx;
+  margin-left: 50rpx;
+}
+.containertext{
+   display: flex;
+   flex-direction:column;
+}
+.textlight{
+  font-size:1rem;
+  margin-left: 50rpx;
+  margin-top: 20rpx;
+}
+#button{
+  margin-top: 80%;
+  margin-left: 65%;
+  margin-right: 5%;
+}
+.textmy{
+  font-weight:300;
+  font-size:1.25rem;
+}
+.nameavatar{
+  margin-left: 50rpx;
+  margin-top: 15rpx;
+  display: flex;
+  flex-direction: row;
+}
+
+.maringtop60{
+  margin-top: 60rpx;
+}
+.maringtop30{
+  margin-top: 30rpx;
+}
+#jiaonang{
+  display: flex;
+  flex-direction: column;
+  padding-left: 50rpx;
+}
+
+.jiaonangmar{
+  margin-left: 10rpx;
+  margin-top: 30rpx;
+  margin-bottom: 20rpx;
+}

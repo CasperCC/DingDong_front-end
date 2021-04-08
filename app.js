@@ -1,9 +1,9 @@
 // app.js
-var that
+var that = this
 App({
   onLaunch() {
     that = this
-    this.getUserInfo()
+    this.getUserInfo(that)
     .then(() => {
       return this.login()
     })
@@ -18,29 +18,30 @@ App({
     .then(() => {
       this.getContacts()
     })
+    
+    // let index = '开发环境'
+    // let host = '';
+    // let NODE_ENV = 'pro';
+    // const fileManager = wx.getFileSystemManager();
+    // try{
+    //   fileManager.accessSync('/env.txt');
+    //   NODE_ENV = 'dev';
+    // }catch(e){}
+    // if( NODE_ENV === 'pro' ){
+    //   this.globalData.serverUrl = 'https://pro.qq.com';
+    // }else{
+    //   this.globalData.serverUrl = 'http://127.0.0.1:7001';
+    // }
   },
 
   /**
    * 获取userinfo
    */
-  getUserInfo: () => {
+  getUserInfo: (that) => {
     return new Promise((resolve, reject) => {
-      wx.getSetting({
-        success: res => {
-          if (res.authSetting['scope.userInfo']) {
-            wx.getUserInfo({
-              success: res => {
-                that.globalData.userInfo = res.userInfo
-                console.log(that.globalData.userInfo)
-                if (that.userInfoReadyCallback) {
-                  that.userInfoReadyCallback(res)
-                }
-                resolve(res.userInfo)
-              }
-            })
-          }
-        }
-      })
+      if (that.globalData.userInfo) {
+        resolve(that.globalData.userInfo)
+      }
     })
   },
 
@@ -61,12 +62,21 @@ App({
       })
       socket.on('error', err => {
         console.log(err)
+        that.onLaunch()
       })
       socket.on('connect', data => {
         console.log('connect')
       })
       socket.on('disconnect', res => {
         console.log('disconnect')
+      })
+      socket.on('receiveMsg', recUser => {
+        // console.log('recUser', recUser)
+        that.globalData.recUser = recUser
+      })
+      socket.on('receiveMsgGroup', recGroup => {
+        // console.log('recGroup', recGroup)
+        that.globalData.recGroup = recGroup
       })
       resolve({code, socket})
     })
@@ -96,7 +106,7 @@ App({
             console.log(err)
           }
         })
-      }, 400)
+      }, 500)
     })
   },
 
@@ -148,6 +158,28 @@ App({
     })
   },
 
+  /**
+   * 监听全局变量globalData中的参数变化
+   * @param {string} method 函数名
+   * @param {string} param  需要监听globalData中的参数名
+   */
+  watch: function (method, param) {
+    var obj = this.globalData
+    Object.defineProperty(obj, param, {
+      configurable: true,
+      enumerable: true,
+      set: function (value) {
+        this._param = value;
+        method(value);
+      },
+      get: function(){
+        return this._param
+      }
+    })
+  },
+
+
+
   // 小程序相关配置
   config: {
     serverUrl: 'http://127.0.0.1:7001',
@@ -155,7 +187,6 @@ App({
     uploadUrl: 'https://oss.cochan.tech',
     imageOssPath: 'DingDong/images/',
     fileOssPath: 'DingDong/files/',
-    heartBeat: '/heartbeat',
     socket: {}
   },
 
@@ -164,5 +195,7 @@ App({
     code: null,
     userInfo: null,
     contacts: null,
+    recUser: null,
+    recGroup: null,
   }
 })

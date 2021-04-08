@@ -8,7 +8,8 @@
     "pages/staffList/staffList",
     "pages/newFriends/newFriends",
     "pages/userInfomation/userInfomation",
-    "pages/sendVerification/sendVerification"
+    "pages/sendVerification/sendVerification",
+    "pages/login/login"
   ],
   "window": {
     "backgroundTextStyle": "light",

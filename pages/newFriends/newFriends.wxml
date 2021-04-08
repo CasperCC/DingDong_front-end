@@ -2,7 +2,7 @@
 <scroll-view scroll-y="true" class="message-list" enable-flex="true">
   <block wx:for='{{applyList}}' wx:key='key'>
     <!--示例用户1-->
-    <view class='user' bindtap='goToUserInfomation' data-item='{{item}}'>
+    <view class='user' bindtap='goToUserInfomation' data-item='{{item}}' wx:if="{{!group}}">
       <image class='header-icon' src='{{item.avatarUrl}}'></image>
       <view class='user-content'>
         <view class='msgline'>
@@ -25,7 +25,40 @@
         <text wx:else class='added_text'>去验证</text>
       </view>
     </view>
+    <view class='user' bindtap='goToGroupInfomation' data-item='{{item}}' wx:else>
+      <image class='header-icon' src='{{item.group_headpic}}'></image>
+      <view class='group'>
+        <view class='group_name'>
+          <text>{{item.name}}</text>
+        </view>
+      </view>
+    </view>
     <!--分割线-->
     <view class='liner'></view>
   </block>
 </scroll-view>
+
+<!-- 设置对方备注弹窗 -->
+<block wx:if="{{isShowConfirm}}">
+  <view class='toast-box'>
+    <view class='toastbg'></view>
+    <view class='showToast'>
+        <view class='toast-title'>
+            <text>设置群聊名称</text>
+        </view>
+        <view class='toast-main'>
+            <view class='toast-input'>
+                <input type='text' placeholder='输入群聊名称' bindinput='setValue'></input>
+            </view>
+        </view>
+        <view class='toast-button'>
+            <view class='button1'>
+                <button catchtap='cancel' style="width:100%">取消</button>
+            </view>
+            <view class='button2'>
+                <button catchtap='confirmAcceptance' style="width:100%">确定</button>
+            </view>
+        </view>
+    </view>
+  </view>
+</block>

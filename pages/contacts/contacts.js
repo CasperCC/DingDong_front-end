@@ -9,7 +9,11 @@ var that
 
 Page({
   data: {
+    checkType: '', //checkbox-多选类型 radio-单选类型 其他-基本通讯录
+    checkFlag: false, //是否开启确定按钮，点击时才开启
+    checkAllType: false, //false-待全选 true-待反选
     staffList:[],
+    staffChooseList: [],
     staffPhotoList:[/*联系人图片列表，方便预览*/],
     staffList_search: [/*搜索联系人列表*/
       /**
@@ -32,6 +36,7 @@ Page({
     placeholder: '搜索', 
     searchHeight: 0, //搜索栏高度，需要传入通讯录插件
     newFriendsPageUrl: '/pages/newFriends/newFriends', //新的朋友页面Url
+    groupPageUrl: '/pages/newFriends/newFriends?type=group'
   },
 
   /**
@@ -49,23 +54,24 @@ Page({
     if(data === null || data === undefined) {
       app.contactsReadyCallback = res => {
         data = res.data
-        console.log('callback: ' + data)
       }
     }
-    for (let index = 0; index < data.length; index++) {
-      if (data[index].mobile == null) {
-        data[index].mobile = ''
+    setTimeout(() => {
+      for (let index = 0; index < data.length; index++) {
+        if (data[index].mobile == null) {
+          data[index].mobile = ''
+        }
+        that.setData({
+          [`staffList[${index}].id`]: data[index].wx_openid,
+          [`staffList[${index}].name`]: data[index].wx_name,
+          [`staffList[${index}].mobile`]: data[index].mobile,
+          [`staffList[${index}].photo`]: data[index].avatarUrl,
+          [`staffList[${index}].positionName`]: data[index].pid,
+          [`staffList[${index}].checked`]: false,
+          [`staffList[${index}].openId`]: data[index].wx_openid
+        })
       }
-      that.setData({
-        [`staffList[${index}].id`]: data[index].id,
-        [`staffList[${index}].name`]: data[index].wx_name,
-        [`staffList[${index}].mobile`]: data[index].mobile,
-        [`staffList[${index}].photo`]: data[index].avatarUrl,
-        [`staffList[${index}].positionName`]: data[index].pid,
-        [`staffList[${index}].checked`]: false,
-        [`staffList[${index}].openId`]: data[index].wx_openid
-      })
-    }
+    }, 500);
   },
 
   /**
@@ -75,12 +81,19 @@ Page({
   changeSortType: function (e) {
     var that = this
     wx.showActionSheet({
-      itemList: ['添加联系人','以姓名排序','以职位排序'],
+      itemList: ['添加联系人','以姓名排序','以职位排序','建 立 群 聊'],
       success(res) {
         // console.log(res.tapIndex)
         if (res.tapIndex == 0) {
           wx.navigateTo({
             url: '/pages/staffList/staffList',
+          })
+        } else if (res.tapIndex == 3) {
+          that.setData({
+            checkType: 'checkbox'
+          });
+          wx.setNavigationBarTitle({
+            title: '选择好友建立群聊',
           })
         } else {
           if (res.tapIndex != that.data.sortType){
@@ -256,7 +269,7 @@ Page({
           wx.navigateTo({
             url: '/pages/message/message?openId='+item.openId+'&nickName='+item.name+'&avatarUrl='+item.photo
           })
-        } else if (res.tapIndex == 1 && item.name) {//复制号码
+        } else if (res.tapIndex == 1 && item.name) {//复制名称
           wx.setClipboardData({
             data: item.name,
             success(res) {
@@ -311,6 +324,103 @@ Page({
     }
   },
 
+  //选中事件
+  checkBoxChange: function (e) {
+    // console.log('checkBoxChange e', e); 
+    
+    var item = e.detail.item ? e.detail.item : e.detail.value
+    // console.log('checkBoxChange item', item);
+
+    var staffList = this.data.staffList
+    var staffChooseList = []
+    for (var i in staffList) {
+      for (var j in item) {
+        if (item[j] == staffList[i].id) {
+          staffChooseList.push(staffList[i]);
+        }
+      }
+    }
+    if (staffChooseList.length > 0) {
+      that.setData({
+        checkFlag: true
+      })
+      // app.toastSuccess('已选择[' + that.data.staffChooseList.length + ']个对象', false);
+    } else {
+      that.setData({
+        checkFlag: false
+      })
+      // app.toastSuccess('已选择[' + that.data.staffChooseList.length + ']个对象', false);
+    }
+    that.data.staffChooseList = item
+  },
+
+  /**
+   * 取消选择
+   */
+  cancelCheck: function () {
+    that.setData({
+      checkType: ''
+    })
+    wx.setNavigationBarTitle({
+      title: '通讯录',
+    })
+  },
+
+  /**
+   * 确认添加好友至群组
+   */
+  addUserToGroup: function () {
+    wx.request({
+      url: app.config.serverUrl + '/api/addUserToGroup',
+      method: 'POST',
+      data: {
+        userList: that.data.staffChooseList,
+        clientId: app.config.socket.id
+      },
+      dataType: 'json',
+      success: res => {
+        if (res.data.ret === 0) {
+          app.toastSuccess('创建成功！')
+          that.setData({
+            checkType: '',
+            checkFlag: false,
+          })
+          wx.setNavigationBarTitle({
+            title: '通讯录',
+          })
+        }
+      }
+    })
+  },
+
+  //单选
+  radioChange: function (e) {
+    //console.log('radioChange e', e);
+
+    var item = e.detail.item ? e.detail.item : e.detail.value;;//"521"
+    //console.log('item', item); 
+
+    var staffList = this.data.staffList;
+    var staff = null;
+    for (var i in staffList) {
+      if (item == staffList[i].id) {
+        staff = staffList[i];
+        break;
+      }
+    }
+    //console.log('staff', staff); 
+
+    if (staff != null) {
+      app.toastSuccess('已选择[' + staff.name + ']', false);
+    }
+
+    //设置上一页选择数据
+    var pages = getCurrentPages();
+    var prevPage = pages[pages.length - 2]; //上一个页面
+    //直接调用上一个页面的setData()方法，把数据存到上一个页面中去
+
+  },
+
   /**
    * 生命周期函数--监听页面显示
    */
@@ -322,7 +432,9 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-
+    this.setData({
+      checkType: ''
+    });
   },
 
   /**

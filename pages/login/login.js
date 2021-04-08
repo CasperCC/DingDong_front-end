@@ -1,21 +1,21 @@
-// index.js
-// 获取应用实例
-const app = getApp()
+// pages/login/login.js
+var app = getApp();
 
 Page({
+
+  /**
+   * 页面的初始数据
+   */
   data: {
-    motto: '该功能区暂未开放🦆~~',
-    userInfo: {},
+    userInfo: [],
     hasUserInfo: false,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
     canIUseGetUserProfile: false
   },
-  // 事件处理函数
-  bindViewTap() {
-    wx.navigateTo({
-      url: '../logs/logs'
-    })
-  },
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
   onLoad() {
     if (wx.getUserProfile) {
       this.setData({
@@ -62,6 +62,9 @@ Page({
           hasUserInfo: true
         })
         app.onLaunch()
+        wx.switchTab({
+          url: '/pages/index/index',
+        })
       }
     })
   },

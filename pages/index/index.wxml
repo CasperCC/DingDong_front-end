@@ -31,3 +31,6 @@
     <view class='liner'></view>
   </block>
 </scroll-view>
+<view wx:if="{{!newsList}}" style="margin-top: 100rpx; text-align: center;">
+  还没有聊天记录，快进入通讯录进行聊天吧~~~
+</view>

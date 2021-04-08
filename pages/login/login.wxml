@@ -1,0 +1,19 @@
+<!--pages/login/login.wxml-->
+<view id="container">
+  <view wx:if="{{!hasUserInfo}}" class="containertext">
+      <text class="text">还未登录哦</text>
+      <text class="textlight">登陆后可享受更多功能~</text>
+      <view id="button"> 
+        <button type="primary" class="mini-btn" size="mini" bindtap="getUserProfile">一键登录</button>
+      </view>
+  </view>
+
+  <view wx:else class="containertext">
+    <text class="text" style="">确实是我本人了</text>
+    <view class="nameavatar">
+      <text class="textmy basis-lg">{{userInfo.nickName}}</text>
+      <view class="cu-avatar xl round basis-xs" style="background-image:url({{userInfo.avatarUrl}});margin-right:50rpx;margin-left:50rpx;"></view>
+    </view>
+  </view>
+
+</view>

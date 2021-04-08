@@ -7,12 +7,25 @@
     <!-- 单个消息1 对方发出（左） -->
     <view wx:if='{{item.speaker=="opposite"}}' id='msg-{{index}}' style='display: flex; padding: 2vw 11vw 2vw 2vw;'>
       <view style='width: 11vw; height: 11vw;'>
-        <image style='width: 11vw; height: 11vw; border-radius: 10rpx;' src='{{oppoHeadIcon}}'></image>
+        <block wx:if="{{group}}">
+          <image style='width: 11vw; height: 11vw; border-radius: 10rpx;' src='{{item.avatarUrl}}'></image>
+        </block>
+        <block wx:else>
+          <image style='width: 11vw; height: 11vw; border-radius: 10rpx;' src='{{oppoHeadIcon}}'></image>
+        </block>
       </view>
-      <view style='width: 4vw; height: 11vw; margin-left: 0.5vw; display: flex; align-items: center; z-index: 9;'>
-        <image style='width: 4vw;' src='/utils/resources/images/left_msg.png' mode='widthFix'></image>
-      </view>
-      <view class='leftMsg'>{{item.content}}</view>
+      <block wx:if='{{item.contentType === 1}}'>
+        <view style='width: 4vw; height: 11vw; margin-left: 0.5vw; display: flex; align-items: center; z-index: 9;'>
+          <image style='width: 4vw;' src='/utils/resources/images/left_msg.png' mode='widthFix'></image>
+        </view>
+        <view class='leftMsg'>{{item.content}}</view>
+      </block>
+      <block wx:elif='{{item.contentType === 2}}'>
+        <view class="imgMsgContent">
+          <image class="imgMsg" src="{{item.content}}" mode="widthFix" bindtap='previewProfilePhoto' data-img="{{item.content}}"></image>
+        </view>
+      </block>
+      <block wx:else></block>
     </view>
 
     <!-- 单个消息2 用户发出（右） -->
@@ -25,7 +38,7 @@
       </block>
       <block wx:elif="{{item.contentType === 2}}">
         <view class="imgMsgContent">
-          <image class="imgMsg" src="{{item.content}}"></image>
+          <image class="imgMsg" src="{{item.content}}" mode="widthFix" bindtap='previewProfilePhoto' data-img="{{item.content}}"></image>
         </view>
       </block>
       <block wx:else></block>

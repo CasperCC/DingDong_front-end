@@ -72,6 +72,17 @@
   color: #888888;
   font-size: 34rpx;
 }
+.group{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 400rpx;
+  margin-left: 30rpx;
+}
+.group_name{
+  color: black;
+  font-size: 34rpx;
+}
 /*对话框消息内容*/
 .dialog{
   width: 545rpx;
@@ -99,4 +110,91 @@
   width: 100%;
   height: 2rpx;
   background-color: rgb(230, 230, 230);
+}
+
+.toast-box {
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+}
+
+
+.toastbg {
+  opacity: 0.2;
+  background-color: black;
+  position: absolute;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.showToast {
+  position: absolute;
+  opacity: 1;
+  width: 70%;
+  margin-left: 15%;
+  margin-top: 40%;
+}
+
+.toast-title {
+  padding-left: 5%;
+  background-color: #ededed;
+  color: black;
+  padding-top: 2vh;
+  padding-bottom: 2vh;
+  border-top-right-radius: 16rpx;
+  border-top-left-radius: 16rpx;
+}
+
+.toast-main {
+  padding-top: 2vh;
+  padding-bottom: 2vh;
+  background-color: white;
+  text-align: center;
+}
+
+.toast-input {
+  margin-left: 5%;
+  margin-right: 5%;
+  border: 1px solid #ddd;
+  padding-left: 2vh;
+  padding-right: 2vh;
+  padding-top: 1vh;
+  padding-bottom: 1vh;
+}
+
+.toast-button {
+  display: flex;
+}
+
+.button1 {
+  width: 50%;
+}
+
+.button2 {
+  width: 50%;
+}
+
+.button1 button {
+  background-color: white;
+  color: #6d6d6d;
+  border-radius: 0px;
+  border-bottom-left-radius: 16rpx;
+}
+
+.button2 button{
+  background-color: white;
+  color: rgb(28, 184, 77);
+  border-radius: 0px;
+  border-bottom-right-radius: 16rpx;
+}
+
+.button1 button:active{
+  background-color: #ededed;
+}
+
+.button2 button:active{
+  background-color: #ededed;
 }

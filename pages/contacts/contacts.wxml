@@ -11,8 +11,14 @@
     </label>
   </form>
   <!-- <view wx:if="{{!searchFocus}}" class="weui-search-bar__form weui-search-bar__cancel-btn weui-menu__flex" bindtap="changeSortType"> </view> -->
-  <image src="/utils/resources/icons/add.png" style="width: 70rpx; height: 70rpx; margin-left: 10px" bindtap="changeSortType"></image>
-  <view wx:if="{{searchFocus}}" class="weui-search-bar__form weui-search-bar__cancel-btn weui-menu__flex" bindtap="searchTextTap">取消</view>
+  <block wx:if="{{checkType == 'checkbox' && !searchFocus}}">
+    <view wx:if="{{checkFlag}}" class="weui-search-bar__form weui-search-bar__cancel-btn weui-menu__flex" bindtap="addUserToGroup">确定</view>
+    <view wx:if="{{!checkFlag}}" class="weui-search-bar__form weui-search-bar__cancel-btn weui-menu__flex" bindtap="cancelCheck">取消</view>
+  </block>
+  <block wx:else>
+    <image src="/utils/resources/icons/add.png" style="width: 70rpx; height: 70rpx; margin-left: 10px" bindtap="changeSortType"></image>
+    <view wx:if="{{searchFocus}}" class="weui-search-bar__form weui-search-bar__cancel-btn weui-menu__flex" bindtap="searchTextTap">取消</view>
+  </block>
 </view>
 
 <view style="height:{{searchHeight}}px;"></view>
@@ -21,6 +27,6 @@
   <alphabet-order-list source="{{staffList_search}}" groupKey="HZPY" imageKey="photo" textKey="name" phoneKey="mobile" positionKey="positionName" checkType="{{checkType}}" searchHeight="{{searchHeight}}" catchitemtap="itemClickEvent" showPoundSign="true" />
 </block>
 <block wx:else>
-  <alphabet-order-list source="{{staffList}}" groupKey="HZPY" imageKey="photo" textKey="name" phoneKey="mobile" positionKey="positionName" checkType="{{checkType}}" searchHeight="{{searchHeight}}" catchitemtap="itemClickEvent" showPoundSign="true" newFriendsPageUrl="{{newFriendsPageUrl}}" />
+  <alphabet-order-list source="{{staffList}}" groupKey="HZPY" imageKey="photo" textKey="name" phoneKey="mobile" positionKey="positionName" checkType="{{checkType}}" searchHeight="{{searchHeight}}" catchitemtap="itemClickEvent" showPoundSign="true" newFriendsPageUrl="{{newFriendsPageUrl}}" groupPageUrl="{{groupPageUrl}}" checkValue="id" bind:checkBoxChange="checkBoxChange" />
 </block>
 

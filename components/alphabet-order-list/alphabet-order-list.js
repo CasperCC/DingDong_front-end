@@ -101,6 +101,15 @@ Component({
           newFriendsPageUrl: newVal
         })
       }
+    },
+    groupPageUrl: { //新的朋友页面Url
+      type: String,
+      value: '',
+      observer: function (newVal, oldVal) {
+        this.setData({
+          groupPageUrl: newVal
+        })
+      }
     }
   },
 
@@ -116,6 +125,7 @@ Component({
     bottomHeight: 0, //是否需要底部留空，默认0，使用于有tabbar里的页面使用
     searchHeight: 0, //搜索栏高度，无搜索栏则为0，有则需要设置，否则点击右侧letter不准确
     newFriendsPageUrl: '', //新的朋友页面Url
+    groupPageUrl: '', //加入的群聊页面Url
   },
 
   //在组件在视图层布局完成后执行
@@ -240,6 +250,12 @@ Component({
       })
     },
 
+    _group: function () {
+      wx.navigateTo({
+        url: this.data.groupPageUrl
+      })
+    },
+
     _copyphonekey: function (e) {
       wx.setClipboardData({
         data: e.currentTarget.dataset.phone,
@@ -260,7 +276,7 @@ Component({
 
     _checkboxchange: function (e) {
       // console.log('_checkboxchange >>>>>', e)
-      this.triggerEvent('checkboxchange', { 'item': e.detail.value }, {})
+      this.triggerEvent('checkBoxChange', { 'item': e.detail.value }, {})
       
     },
 

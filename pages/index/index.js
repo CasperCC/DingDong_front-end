@@ -14,9 +14,16 @@ Page({
   goToChatPage(e) {
     var item = e.currentTarget.dataset.item
     // console.log(e)
-    wx.navigateTo({
-      url: '/pages/message/message?openId='+item.openId+'&nickName='+item.nickName+'&avatarUrl='+item.avatarUrl
-    })
+    if (item.openId) {
+      wx.navigateTo({
+        url: '/pages/message/message?openId='+item.openId+'&nickName='+item.nickName+'&avatarUrl='+item.avatarUrl
+      })
+    } else {
+      wx.navigateTo({
+        url: '/pages/message/message?groupId='+item.groupId+'&nickName='+item.nickName+'&group=true'
+      })
+    }
+    
   },
   onLoad() {
     if (app.globalData.userInfo) {
@@ -59,11 +66,9 @@ Page({
           }, 1000)
         } else {
           app.toastSuccess('您未登录或网络超时!')
-          setTimeout(() => {
-            wx.switchTab({
-              url: '/pages/mine/mine',
-            })
-          }, 2000)
+          wx.redirectTo({
+            url: '/pages/login/login',
+          })
         }
       }, 2000)
     }
@@ -87,8 +92,6 @@ Page({
         this.setData({
           newsList: res.data
         })
-        // console.log(app.config.socket.id)
-        // console.log(res.data)
       }
     })
   }

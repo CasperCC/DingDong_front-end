@@ -1,50 +1,13 @@
 // pages/message/message.js
 const app = getApp()
-var that, message, intervalId, socket, options, status
+var that, message, socket, options, status
 var inputVal = ''
 var msgList = []
 var windowWidth = wx.getSystemInfoSync().windowWidth
 var windowHeight = wx.getSystemInfoSync().windowHeight
 var keyHeight = 0
 
-/**
- * 初始化数据
- */
-function initData(that, options) {
-  inputVal = ''
-  intervalId = setInterval(() => {
-    wx.request({
-      url: app.config.serverUrl + '/api/getChattingRecords',
-      method: 'POST',
-      data: {
-        clientId: app.config.socket.id,
-        opposite: options.openId
-      },
-      dataType: 'json',
-      success: res => {
-        that.setData({
-          msgList: res.data
-        })
-        msgList = res.data
-        if (!status) {
-          that.blur()
-        }
-        // that.setData({
-        //   scrollHeight: '100vh',
-        //   inputBottom: 0
-        // })
-        // that.setData({
-        //   toView: 'msg-' + (msgList.length - 1)
-        // })
-        // // that.blur() 
-      }
-    })
-  }, 1000);
-  
-  that.setData({
-    inputVal
-  })
-}
+
 Page({
   /**
    * 页面的初始数据
@@ -52,39 +15,135 @@ Page({
   data: {
     news: [],
     nickName: '',
-    avatarUrl: ''
+    avatarUrl: '',
+    imageList: [],
+    pageType: false,
   },  
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
     that = this
-    // console.log(options)
+    this.options = options
+    this.data.pageType = true
     // 设置socket连接地址
     socket = app.config.socket
     that.socketStart(options)
-    initData(this, options)
+    that.initData(this, options)
+    const oppoHeadIcon = options.avatarUrl ? options.avatarUrl : ''
     this.setData({
       myHeadIcon: app.globalData.userInfo.avatarUrl,
-      oppoHeadIcon: options.avatarUrl
+      oppoHeadIcon: oppoHeadIcon
+    })
+    if (options.group == 'true') {
+      that.joinRoom()
+      that.updateRecTime()
+    } else {
+      that.updateUnReadNum()
+    }
+  },
+  /**
+   * 初始化数据
+   */
+  initData: function(that, options) {
+    that = this
+    inputVal = ''
+    options.openId ? that.getChattingRecords(options) : that.getChattingRecordsGroup(options)
+    var groupData = options.group ? options.group : null
+    that.setData({
+      inputVal,
+      group: groupData
     })
   },
+
+  /**
+   * 进入房间
+   */
+  joinRoom: function () {
+    var that = this
+    socket.emit('joinRoom', {
+      roomId: that.options.groupId
+    })
+  },
+
+  /**
+   * 退出房间
+   */
+  leaveRoom: function () {
+    var that = this
+    socket.emit('leaveRoom', {
+      roomId: that.options.groupId
+    })
+  },
+
   socketStart: function(options) {
     wx.setNavigationBarTitle({
       title: options.nickName,
     })
-    // 接收消息
-    this.options = options
-    socket.on('msg', function(msg) {
+    options.group == 'true' ? app.watch(that.recGroup, 'recGroup') : app.watch(that.recUser, 'recUser')
+  },
+
+  recGroup: function (rec) {
+    if (!rec) {
+      return
+    }
+    if (rec.clientId != app.config.socket.id) {
       msgList.push({
         speaker: 'opposite',
-        contentType: 1,
-        content: msg
+        contentType: rec.contentType,
+        content: rec.content,
+        group: true,
+        avatarUrl: rec.avatarUrl,
+        wx_name: rec.wx_name
       })
       this.setData({
         msgList
       })
-      // console.log(msg)
+      this.setData({
+        toView: 'msg-' + (msgList.length - 1)
+      })
+      if (rec.contentType === 2) {
+        that.data.imageList.push(rec.content)
+      }
+    }
+  },
+
+  recUser: function (rec) {
+    if (!rec || rec.oppOpenId != that.options.openId) {
+      return
+    }
+    console.log(rec)
+    msgList.push({
+      speaker: rec.speaker,
+      contentType: rec.contentType,
+      content: rec.content
+    })
+    this.setData({
+      msgList
+    })
+    this.setData({
+      toView: 'msg-' + (msgList.length - 1)
+    })
+    if (rec.contentType === 2) {
+      that.data.imageList.push(rec.content)
+    }
+    if (that.data.pageType) {
+      socket.emit('isRead', {
+        msgId: rec.msgId
+      })
+    }
+    // console.log(msg)
+  },
+
+  /**
+   * 预览图片
+   * @param {any} e 
+   */
+  previewProfilePhoto: function (e) {
+    var profilePhotoUrl = e.currentTarget.dataset.img
+    wx.previewImage({
+      current: profilePhotoUrl,
+      urls: that.data.imageList,
     })
   },
 
@@ -116,6 +175,66 @@ Page({
   },
 
   /**
+   * 获取私聊聊天记录
+   * @param {any} options 
+   */
+  getChattingRecords: function (options) {
+    wx.request({
+      url: app.config.serverUrl + '/api/getChattingRecords',
+      method: 'POST',
+      data: {
+        clientId: app.config.socket.id,
+        opposite: options.openId
+      },
+      dataType: 'json',
+      success: res => {
+        that.setData({
+          msgList: res.data
+        })
+        msgList = res.data
+        if (!status) {
+          that.blur()
+        }
+        for (let i = 0; i < msgList.length; i++) {
+          if (msgList[i].contentType === 2) {
+            that.data.imageList.push(msgList[i].content)
+          }
+        }
+      }
+    })
+  },
+
+  /**
+   * 获取群聊聊天记录
+   * @param {any} options 
+   */
+  getChattingRecordsGroup: function (options) {
+    wx.request({
+      url: app.config.serverUrl + '/api/getChattingRecordsGroup',
+      method: 'POST',
+      data: {
+        clientId: app.config.socket.id,
+        groupId: options.groupId
+      },
+      dataType: 'json',
+      success: res => {
+        that.setData({
+          msgList: res.data
+        })
+        msgList = res.data
+        if (!status) {
+          that.blur()
+        }
+        for (let i = 0; i < msgList.length; i++) {
+          if (msgList[i].contentType === 2) {
+            that.data.imageList.push(msgList[i].content)
+          }
+        }
+      }
+    })
+  },
+
+  /**
    * 发送点击监听
    */
   sendClick: function(e) {
@@ -131,11 +250,19 @@ Page({
         inputVal,
         toView: 'msg-' + (msgList.length - 1)
       })
-      socket.emit('sendMsg', {
-        target: that.options.openId,
-        msg: e.detail.value,
-        type: 1
-      })
+      if (that.options.group == 'true') {
+        socket.emit('sendMsgGroup', {
+          target: that.options.groupId,
+          msg: e.detail.value,
+          type: 1
+        })
+      } else {
+        socket.emit('sendMsg', {
+          target: that.options.openId,
+          msg: e.detail.value,
+          type: 1
+        })
+      }
     }
   },
 
@@ -169,18 +296,17 @@ Page({
           const tempFilePaths = res.tempFilePaths
           for (let i = 0; i < tempFilePaths.length; i++) {
             that.uploadToOss(options, tempFilePaths[i], 2).then(url => {
-              console.log(url)
               msgList.push({
                 speaker: 'me',
                 contentType: 2,
                 content: url
               })
+              that.data.imageList.push(url)
               that.setData({
                 msgList: msgList,
                 toView: 'msg-' + (msgList.length - 1)
               })
             })
-            
           }
         }
       })
@@ -196,7 +322,7 @@ Page({
       var d = new Date();
       var date = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()+'/';
       const path = type === 2 ? app.config.imageOssPath : app.config.fileOssPath
-      const key = path+date+tempFilePaths.substring(11, 59)
+      const key = path+date+tempFilePaths.substring(11, 60)
       wx.uploadFile({
         filePath: tempFilePaths,
         name: 'file',
@@ -209,11 +335,19 @@ Page({
         },
         success: res => {
           if (res.statusCode === 204) {
-            socket.emit('sendMsg', {
-              target: that.options.openId,
-              msg: key,
-              type: 2
-            })
+            if (that.options.group == 'true') {
+              socket.emit('sendMsgGroup', {
+                target: that.options.groupId,
+                msg: key,
+                type: 2
+              })
+            } else {
+              socket.emit('sendMsg', {
+                target: that.options.openId,
+                msg: key,
+                type: 2
+              })
+            }
             app.toastSuccess('发送成功！')
             that.getOssUrl(key).then(url => {
               resolve(url)
@@ -267,7 +401,7 @@ Page({
    * 退回上一页
    */
   toBackClick: function() {
-    wx.navigateBack({})
+    
   },
 
   /**
@@ -288,15 +422,52 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-    clearInterval(intervalId)
-    // console.log('onhide'+intervalId)
+    
+  },
+
+  updateRecTime: function () {
+    wx.request({
+      url: app.config.serverUrl + '/api/updateRecTime',
+      method: 'POST',
+      dataType: 'json',
+      data: {
+        clientId: app.config.socket.id,
+        groupId: that.options.groupId
+      },
+      success: res => {
+        if (res.data.ret === -1) {
+          console.log('updateRecTime', '网络错误！')
+        }
+      }
+    })
+  },
+
+  updateUnReadNum: function () {
+    wx.request({
+      url: app.config.serverUrl + '/api/updateUnReadNum',
+      method: 'POST',
+      dataType: 'json',
+      data: {
+        clientId: app.config.socket.id,
+        oppOpenId: that.options.openId
+      },
+      success: res => {
+        if (res.data.ret === -1) {
+          console.log('网络错误！')
+        }
+      }
+    })
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-    clearInterval(intervalId)
+    if (this.options.group == 'true') {
+      this.updateRecTime()
+      this.leaveRoom()
+    }
+    that.data.pageType = false
   },
 
   /**
