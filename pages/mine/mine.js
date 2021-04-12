@@ -1,71 +1,103 @@
-// index.js
 // 获取应用实例
 const app = getApp()
 
 Page({
   data: {
-    motto: '该功能区暂未开放🦆~~',
     userInfo: {},
     hasUserInfo: false,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
-    canIUseGetUserProfile: false
+    canIUseGetUserProfile: false,
+    list: [
+      {
+        id: 'notice',
+        name: '公告',
+        open: false,
+        pages: [
+          {path: "announce", title: '发布公告'},
+          {path: "history", title: '历史公告'}
+        ]
+      }, {
+        id: 'timecard',
+        name: '打卡',
+        open: false,        
+        pages: [
+          {path: "normal", title: '正常出勤'},
+          {path: "history", title: '打卡记录'}
+          ]
+      }, {
+        id: 'apply',
+        name: '各类申请',
+        open: false,        
+        pages: [
+          {path: "overwork", title: '加班申请'},
+          {path: "vacation", title: '请假申请'}
+          ]
+      }, {
+        id: 'reply',
+        name: '申请结果',
+        open: false,        
+        pages: [
+          {path: "overwork", title: '加班批复'},
+          {path: "vacation", title: '请假批复'}
+          ]
+      }
+    ]
   },
-  // 事件处理函数
-  bindViewTap() {
-    wx.navigateTo({
-      url: '../logs/logs'
-    })
+  
+  kindToggle: function (e) {        
+    var id = e.currentTarget.id, list = this.data.list;
+    for (var i = 0, len = list.length; i < len; ++i) {
+      if (list[i].id == id) {
+        list[i].open = !list[i].open
+      } else {
+        list[i].open = false
+      }
+    }
+    this.setData({
+      list: list
+    });
   },
   onLoad() {
-    if (wx.getUserProfile) {
-      this.setData({
-        canIUseGetUserProfile: true
-      })
-    }
-    if (app.globalData.userInfo) {
-      this.setData({
-        userInfo: app.globalData.userInfo,
-        hasUserInfo: true
-      })
-    } else if (this.data.canIUseGetUserProfile) {
-      // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-      // 所以此处加入 callback 以防止这种情况
-      app.userInfoReadyCallback = res => {
-        this.setData({
-          userInfo: res.userInfo,
-          hasUserInfo: true
-        })
-      }
-    } else {
-      // 在没有 open-type=getUserInfo 版本的兼容处理
-      wx.getUserProfile({
-        desc: '用户登录',
-        success: res => {
-          console.log(res)
-          app.globalData.userInfo = res.userInfo
-          this.setData({
-            userInfo: res.userInfo,
-            hasUserInfo: true
-          })
-        }
-      })
-    }
+    this.getProfile()
   },
-  getUserProfile() {
-    wx.getUserProfile({
-      desc: '用户登录',
+
+  getProfile: function () {
+    var that = this
+    wx.request({
+      url: app.config.serverUrl + '/api/getProfile',
+      method: 'POST',
+      dataType: 'json',
+      data: {
+        clientId: app.config.socket.id
+      },
       success: res => {
-        console.log(res.userInfo)
-        app.globalData.userInfo = res.userInfo
-        this.setData({
-          userInfo: res.userInfo,
-          hasUserInfo: true
+        that.setData({
+          userInfo: res.data
         })
-        app.onLaunch()
       }
     })
   },
 
+  /**
+   * 预览头像👤
+   * @param {any} e 
+   */
+  previewProfilePhoto: function (e) {
+    var profilePhotoUrl = e.currentTarget.dataset.icon
+    wx.previewImage({
+      current: profilePhotoUrl,
+      urls: [profilePhotoUrl],
+    })
+  },
+
+  /**
+   * 跳转公告页面
+   */
+  goToNoticePage: function () {
+    wx.navigateTo({
+      url: '/pages/notice/notice',
+    })
+  },
 
   /**
    * 生命周期函数--监听页面初次渲染完成

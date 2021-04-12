@@ -20,17 +20,16 @@ App({
     })
     
     // let index = '开发环境'
-    // let host = '';
     // let NODE_ENV = 'pro';
     // const fileManager = wx.getFileSystemManager();
     // try{
-    //   fileManager.accessSync('/env.txt');
+    //   fileManager.accessSync('./env.txt');
     //   NODE_ENV = 'dev';
     // }catch(e){}
     // if( NODE_ENV === 'pro' ){
-    //   this.globalData.serverUrl = 'https://pro.qq.com';
+    //   that.globalData.serverUrl = 'https://cochan.tech';
     // }else{
-    //   this.globalData.serverUrl = 'http://127.0.0.1:7001';
+    //   that.globalData.serverUrl = 'http://127.0.0.1:7001';
     // }
   },
 
@@ -106,7 +105,7 @@ App({
             console.log(err)
           }
         })
-      }, 500)
+      }, 1500)
     })
   },
 
@@ -131,6 +130,10 @@ App({
       wx.request({
         url: that.config.serverUrl + '/api/getContacts',
         method: 'POST',
+        dataType: 'json',
+        data: {
+          clientId: that.config.socket.id
+        },
         success(res) {
           that.globalData.contacts = res.data
           // console.log(res)
@@ -142,7 +145,7 @@ App({
           console.log(err)
         }
       })
-    }, 400)
+    }, 1500)
   },
   
   /**
@@ -177,13 +180,11 @@ App({
       }
     })
   },
-
-
-
+  
   // 小程序相关配置
   config: {
     serverUrl: 'http://127.0.0.1:7001',
-    // serverUrl: 'http://47.115.184.168:7001',
+    // serverUrl: 'https://cochan.tech',
     uploadUrl: 'https://oss.cochan.tech',
     imageOssPath: 'DingDong/images/',
     fileOssPath: 'DingDong/files/',

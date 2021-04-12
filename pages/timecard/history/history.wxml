@@ -1,0 +1,17 @@
+<!--pages/timecard/history/history.wxml-->
+<scroll-view scroll-y="true">
+    <view wx:for="{{checks}}" wx:for-item="item" class="list-wrap" wx:key="item">
+        <view bindtap="toDetail" data-check="{{item}}" class="list" data-sys-no="{{item.SysNo}}">
+            <image wx:if="{{item.item === 0}}" src="../../../utils/resources/icons/clockIn.png" class="rec-avatar"></image>
+            <image wx:else src="../../../utils/resources/icons/clockOut.png" class="rec-avatar"></image>
+            <view class="mid">
+                <view class="title">{{item.time}}</view>
+                <view class="discription">{{item.location}}</view>
+                <view class="detail">            
+                    <text class="radius"> {{item.address}} </text>
+                </view>
+            </view>
+        </view>
+    <!--<image class="list-btn qr-little" src="../../images/qrcode_little.png" bindtap="openActionSheet" data-code="{{item.CodeImgPath}}"></image>-->
+    </view>
+</scroll-view>

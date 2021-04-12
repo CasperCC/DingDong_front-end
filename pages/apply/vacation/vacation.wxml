@@ -1,0 +1,66 @@
+<!--pages/overwork/list/list.wxml-->
+<import src="../../common/head.wxml" />
+
+<view class="container">
+  <template is="head" data="{{title: UI.title}}"/>
+  <form catchsubmit="formSubmit" catchreset="formReset">
+    <view class="weui-cells__title">{{UI.startdatepicker}}</view>
+      <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">{{UI.current}}</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker mode="date" name="startDate" value="{{startDate}}" start="{{start}}" end="{{end}}" fields="day" bindchange="bindStartDateChange">
+            <view class="weui-input">{{startDate}}</view>
+          </picker>
+        </view>
+      </view>
+    </view>
+
+    <view class="weui-cells__title">{{UI.enddatepicker}}</view>
+      <view class="weui-cells weui-cells_after-title">
+      <view class="weui-cell weui-cell_input">
+        <view class="weui-cell__hd">
+          <view class="weui-label">{{UI.current}}</view>
+        </view>
+        <view class="weui-cell__bd">
+          <picker mode="date" name="endDate" value="{{endDate}}" start="{{start}}" end="{{end}}" fields="day" bindchange="bindEndDateChange">
+            <view class="weui-input">{{endDate}}</view>
+          </picker>
+        </view>
+      </view>
+    </view>
+
+  <view class="page-body">
+    <view class="page-section">
+      <view class="weui-cells__title">{{UI.reasonpicker}}</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">{{UI.current}}</view>
+          </view>
+          <view class="weui-cell__bd">
+            <picker name="reason" bindchange="bindPickerChange" value="{{overworkReasons[index].id}}" range="{{overworkReasons}}" range-key="msg">
+              <view class="weui-input">{{overworkReasons[index].msg}}</view>
+            </picker>
+          </view>
+        </view>
+      </view>
+
+      
+      <view class="weui-cells__title">{{UI.memo}}</view>
+      <view class="textarea-wrp">
+        <textarea name="memo" auto-height />
+      </view>      
+
+      <view class="btn-area">
+        <button type="primary" formType="submit" class="btn-save">{{UI.save}}</button>
+        <!--<button formType="reset">Reset</button>-->
+      </view>
+
+
+    </view>
+    </view>
+  </form>
+</view>

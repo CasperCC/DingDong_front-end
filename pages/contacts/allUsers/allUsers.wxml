@@ -1,0 +1,32 @@
+<view class="weui-search-bar" id="searchBar">
+  <form class="weui-search-bar__form">
+    <view class="weui-search-bar__box weui-menu__flex">
+      <text class="iconfont icon-search weui-icon-search"></text>
+      <input type="text" class="weui-search-bar__input" id="searchInput" name="searchInput" value="{{searchText}}" bindinput="searchTextInput" bindconfirm="searchSubmit" placeholder="{{placeholder}}" focus="{{searchFocus}}" confirm-type="search" />
+      <text class="iconfont icon-round_close_light weui-icon-clear" bindtap="searchClearTap"></text>
+    </view>
+    <label wx:if="{{!searchFocus}}" class="weui-search-bar__label weui-menu__flex" style="transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);" bindtap="searchTextTap">
+      <text class="iconfont icon-search weui-icon-search"></text>
+      <text class="span">{{placeholder}}</text>
+    </label>
+  </form>
+  <!-- <view wx:if="{{!searchFocus}}" class="weui-search-bar__form weui-search-bar__cancel-btn weui-menu__flex" bindtap="changeSortType"> </view> -->
+  <block wx:if="{{checkType == 'checkbox' && !searchFocus}}">
+    <view wx:if="{{checkFlag}}" class="weui-search-bar__form weui-search-bar__cancel-btn weui-menu__flex" bindtap="addUserToGroup">确定</view>
+    <view wx:if="{{!checkFlag}}" class="weui-search-bar__form weui-search-bar__cancel-btn weui-menu__flex" bindtap="cancelCheck">取消</view>
+  </block>
+  <block wx:else>
+    <image src="/utils/resources/icons/add.png" style="width: 70rpx; height: 70rpx; margin-left: 10px" bindtap="changeSortType"></image>
+    <view wx:if="{{searchFocus}}" class="weui-search-bar__form weui-search-bar__cancel-btn weui-menu__flex" bindtap="searchTextTap">取消</view>
+  </block>
+</view>
+
+<view style="height:{{searchHeight}}px;"></view>
+
+<block wx:if="{{staffList_search.length > 0}}">
+  <alphabet-order-list source="{{staffList_search}}" groupKey="HZPY" imageKey="photo" textKey="name" phoneKey="mobile" positionKey="positionName" checkType="{{checkType}}" searchHeight="{{searchHeight}}" catchitemtap="itemClickEvent" showPoundSign="true" />
+</block>
+<block wx:else>
+  <alphabet-order-list source="{{staffList}}" groupKey="HZPY" imageKey="photo" textKey="name" phoneKey="mobile" positionKey="positionName" checkType="{{checkType}}" searchHeight="{{searchHeight}}" catchitemtap="itemClickEvent" showPoundSign="true" checkValue="id" bind:checkBoxChange="checkBoxChange" />
+</block>
+

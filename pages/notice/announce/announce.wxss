@@ -1,0 +1,24 @@
+/* pages/notice/announce/announce.wxss */
+@import "../../common/lib/weui.wxss";
+.page {
+  background-color: #ededed !important;
+}
+
+textarea {
+    width: 660rpx;
+    padding: 25rpx 20rpx;
+    background-color: #ffffff;
+    border: 0.5rpx solid #f1f1f1
+}
+.textarea-wrp {
+    padding: 0 25rpx;
+    background-color: #ededed;
+}
+.btn-save {
+  margin-top: 50rpx !important;
+  width: 95% !important;
+  height: 40px !important;
+}
+.container {
+    padding: 80rpx 0 !important;
+}

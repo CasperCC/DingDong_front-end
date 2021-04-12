@@ -1,0 +1,30 @@
+/* pages/timecard/normal/normal.wxss */
+@import "../../common/lib/weui.wxss";
+@import "../../common/app.wxss";
+
+.picker{
+  padding: 19rpx 26rpx;
+  background-color: #FFFFFF;
+}
+
+.display-container {
+  align-items: center;
+  justify-content: center;
+  /*border: 1px solid grey;*/
+  margin: 10px;
+  text-align: center;
+}
+
+.clock {
+  font-size: 3.4em;
+  font-weight: 500;
+  /*color: #006df0;*/
+  align-self: center;
+}
+
+.btn-area {
+  margin-top: 60rpx;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 30rpx;
+}

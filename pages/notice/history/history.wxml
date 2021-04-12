@@ -1,0 +1,18 @@
+<!--pages/notice/notice.wxml-->
+<scroll-view scroll-y="true" class="notice-list" enable-flex="true">
+  <block wx:for='{{noticeList}}' wx:key='key'>
+    <view class="record">
+      <view class="on">
+        <text class="action">{{item.title}}</text>
+      </view>
+      <view class="hr"></view>
+      <view class="shortintro">
+        {{item.content}}
+      </view>
+      <view class="under">
+        <text class="time">{{item.time}}</text>
+        <text class="time" style="margin-left: 20rpx">发布人: {{item.wx_name}}</text>
+      </view>
+    </view>
+  </block>
+</scroll-view>

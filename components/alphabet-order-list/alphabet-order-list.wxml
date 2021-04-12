@@ -77,13 +77,19 @@
       </block>
       <!--常规模式-->
       <block wx:else>
-        <view class='tag-item' bindtap='_newFriends'>
+        <view class='tag-item' bindtap='_newFriends' wx:if="{{newFriendsPageUrl!=''}}">
           <image class='item-image' src='/utils/resources/icons/newFriends.png'></image>
           <view class='item-text'>
             <view>新的朋友</view>
           </view>
         </view>
-        <view class='tag-item' bindtap='_group'>
+        <view class='tag-item' bindtap='_company' wx:if="{{companyPageUrl!=''}}">
+          <image class='item-image' src='/utils/resources/icons/company.png'></image>
+          <view class='item-text'>
+            <view>公司通讯录</view>
+          </view>
+        </view>
+        <view class='tag-item' bindtap='_group' wx:if="{{groupPageUrl!=''}}">
           <image class='item-image' src='/utils/resources/icons/group.png'></image>
           <view class='item-text'>
             <view>加入的群聊</view>

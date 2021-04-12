@@ -110,6 +110,15 @@ Component({
           groupPageUrl: newVal
         })
       }
+    },
+    companyPageUrl: {
+      type: String,
+      value: '',
+      observer: function (newVal, oldVal) {
+        this.setData({
+          companyPageUrl: newVal
+        })
+      }
     }
   },
 
@@ -126,6 +135,7 @@ Component({
     searchHeight: 0, //搜索栏高度，无搜索栏则为0，有则需要设置，否则点击右侧letter不准确
     newFriendsPageUrl: '', //新的朋友页面Url
     groupPageUrl: '', //加入的群聊页面Url
+    companyPageUrl: '', //公司全体人员通讯录
   },
 
   //在组件在视图层布局完成后执行
@@ -253,6 +263,12 @@ Component({
     _group: function () {
       wx.navigateTo({
         url: this.data.groupPageUrl
+      })
+    },
+
+    _company: function () {
+      wx.navigateTo({
+        url: this.data.companyPageUrl
       })
     },
 

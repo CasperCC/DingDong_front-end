@@ -1,0 +1,90 @@
+.notice-list{
+  background-color:#f5f5f5;
+}
+.in{
+  background-color:#ffffff;
+  display:flex;
+}
+.hr{
+  height: 1px;
+  background-color: #dedede;
+  position:relative;
+  margin: 20rpx 0;
+  width: 100%;
+}
+.left{
+  border-right:1px solid green;
+  padding-right:20px;
+}
+.right{
+  padding-left:20px;
+}
+.left-in{
+  color: #f9364f;
+}
+.right-in{
+    color: #9a9a9a;
+}
+.record{
+  margin-bottom:30rpx;
+  background-color:#ffffff;
+  padding:12px 10px;
+}
+.under{
+  margin-top:15px;
+}
+.section{
+  display: flex;
+  flex-direction: row;
+  margin: 10rpx 0;
+}
+.action{
+  color:#000000;
+  font-size: 37rpx;
+}
+.item{
+  color: #999999;
+  font-size: 37rpx;
+  width: 200rpx;
+}
+.money{
+  float:right;
+  color:#999999;
+}
+.time{
+  color:#999999;
+  font-size:32rpx;
+}
+.detail{
+  margin-left:5px;
+}
+.succerr{
+  float:right;
+  color:#999999;
+  font-size:13px;
+}
+.tips{
+  margin-top:20px;
+  color:#999999;
+  padding:0 10px;
+}
+.shortintro{
+  color:#595959;
+  font-size: 37rpx;
+  margin-left: 20rpx;
+}
+.status0{
+  color: rgb(221, 0, 43);
+  font-size: 37rpx;
+  margin-left: 20rpx;
+}
+.status1{
+  color: #595959;
+  font-size: 37rpx;
+  margin-left: 20rpx;
+}
+.status2{
+  color: rgb(55, 185, 44);
+  font-size: 37rpx;
+  margin-left: 20rpx;
+}

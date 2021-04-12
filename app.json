@@ -9,8 +9,22 @@
     "pages/newFriends/newFriends",
     "pages/userInfomation/userInfomation",
     "pages/sendVerification/sendVerification",
-    "pages/login/login"
+    "pages/login/login",
+    "pages/timecard/normal/normal",
+    "pages/timecard/history/history",
+    "pages/apply/overwork/overwork",
+    "pages/apply/vacation/vacation",
+    "pages/notice/history/history",
+    "pages/notice/announce/announce",
+    "pages/reply/overwork/overwork",
+    "pages/reply/vacation/vacation",
+    "pages/contacts/allUsers/allUsers"
   ],
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于打卡记录"
+    }
+  },
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",

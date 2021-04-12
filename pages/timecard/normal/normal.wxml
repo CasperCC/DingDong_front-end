@@ -1,0 +1,62 @@
+<!--pages/timecard/normal/normal.wxml-->
+<import src="../../common/head.wxml" />
+
+<view class="container">
+  <template is="head" data="{{title: title}}"/>
+
+  <view class="display-container">
+    <text class="clock">{{displayTime}}</text>
+  </view>
+
+  <view class="page-body">
+    <form catchsubmit="formSubmit" catchreset="formReset">
+    <view class="page-section">
+      <view class="weui-cells__title">{{UI.checkType}}</view>
+      <view class="weui-cells weui-cells_after-title">
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">{{UI.current}}</view>
+          </view>
+          <view class="weui-cell__bd">
+            
+            <picker name="type" bindchange="bindPickerChange" value="{{checkType[0].id}}" range="{{checkType}}" range-key="msg">
+              <view class="weui-input">{{checkType[0].msg}}</view>
+            </picker>
+
+          </view>
+        </view>
+      </view>
+
+
+      <view class="page-section">
+
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">{{UI.locName}}</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input class="weui-input" type="text" disabled="{{true}}" name="locName" value="{{UI.locNameContent}}" name="name"></input>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">{{UI.locDesc}}</view>
+          </view>
+          <view class="weui-cell__bd">
+            <input class="weui-input" type="text" disabled="{{true}}" name="locDesc" value="{{UI.locDescContent}}" name="address"></input>
+          </view>
+        </view>
+
+        <view class="btn-area" id="buttonContainer">
+          <button type="info" bindtap="relocate" loading="{{loading}}" style="border: 1px solid #dedede;">{{UI.locButton}}</button>
+        </view>
+      </view>
+
+    </view>
+
+    <view class="btn-area" id="buttonContainer">
+      <button formType="submit" type="primary" style="border: 1px solid #dedede;">{{UI.submitButton}}</button>
+    </view>
+  </form>
+  </view>
+</view>

@@ -27,6 +27,6 @@
   <alphabet-order-list source="{{staffList_search}}" groupKey="HZPY" imageKey="photo" textKey="name" phoneKey="mobile" positionKey="positionName" checkType="{{checkType}}" searchHeight="{{searchHeight}}" catchitemtap="itemClickEvent" showPoundSign="true" />
 </block>
 <block wx:else>
-  <alphabet-order-list source="{{staffList}}" groupKey="HZPY" imageKey="photo" textKey="name" phoneKey="mobile" positionKey="positionName" checkType="{{checkType}}" searchHeight="{{searchHeight}}" catchitemtap="itemClickEvent" showPoundSign="true" newFriendsPageUrl="{{newFriendsPageUrl}}" groupPageUrl="{{groupPageUrl}}" checkValue="id" bind:checkBoxChange="checkBoxChange" />
+  <alphabet-order-list source="{{staffList}}" groupKey="HZPY" imageKey="photo" textKey="name" phoneKey="mobile" positionKey="positionName" checkType="{{checkType}}" searchHeight="{{searchHeight}}" catchitemtap="itemClickEvent" showPoundSign="true" newFriendsPageUrl="{{newFriendsPageUrl}}" groupPageUrl="{{groupPageUrl}}" companyPageUrl="{{companyPageUrl}}" checkValue="id" bind:checkBoxChange="checkBoxChange" />
 </block>
 

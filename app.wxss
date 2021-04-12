@@ -1,5 +1,6 @@
 /**app.wxss**/
 @import "/lib/iconfont.wxss";
+/* reset */
 .container {
   height: 100%;
   display: flex;
@@ -151,3 +152,7 @@ radio .wx-radio-input.wx-radio-input-checked::before{
   border-color: rgb(137, 137, 138);
   background: rgba(130, 131, 131, 0.5);
 }
+
+
+
+

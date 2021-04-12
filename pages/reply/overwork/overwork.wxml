@@ -1,0 +1,42 @@
+<scroll-view scroll-y="true" class="notice-list" enable-flex="true">
+  <block wx:for='{{applyList}}' wx:key='key'>
+    <view class="record">
+			<view class="in">
+				<view class="action">申请编号：{{item.id}}</view>
+			</view>
+			<view class="hr"></view>
+			<view class="section" style="margin-top:10rpx">
+				<text class="item">加班日期：</text>
+				<view class="shortintro">{{item.date}}</view>
+			</view>
+			<view class="section">
+				<text class="item">加班时长：</text>
+				<view class="shortintro">{{item.duration}} 分钟</view>
+			</view>
+      <view class="section">
+				<text class="item">加班原因：</text>
+				<view class="shortintro">{{item.type}}</view>
+			</view>
+			<view class="section" wx:if="{{item.comment}}">
+				<text class="item">备注：</text>
+				<view class="shortintro">{{item.comment}}</view>
+			</view>
+			<view class="section">
+				<text class="item">状态：</text>
+				<view class="{{'status'+item.status}}">{{item.condition}}</view>
+			</view>
+			<view class="section" wx:if="{{item.reply}}">
+				<text class="item">审批备注：</text>
+				<view class="shortintro">{{item.reply}}</view>
+			</view>
+			<view class="section" wx:if="{{item.reply_user}}">
+				<text class="item">审批人：</text>
+				<view class="shortintro">{{item.reply_user}}</view>
+			</view>
+      <view class="under">
+        <text class="time">{{item.time}}</text>
+        <text class="time" style="margin-left: 20rpx">申请人: {{item.wx_name}}</text>
+      </view>
+    </view>
+  </block>
+</scroll-view>

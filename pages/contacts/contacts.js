@@ -14,20 +14,7 @@ Page({
     checkAllType: false, //false-待全选 true-待反选
     staffList:[],
     staffChooseList: [],
-    staffPhotoList:[/*联系人图片列表，方便预览*/],
-    staffList_search: [/*搜索联系人列表*/
-      /**
-       * 示例：
-       * {
-       * id: 100,
-       * name: '安国庆',
-       * mobile: '13897391221',
-       * photo: '/utils/resources/images/head6.jpeg',
-       * positionName: '办公室职员',
-       * checked: false,
-      },
-       */
-    ],
+    staffList_search: [],
     sortType: 1, //排序类型，默认1-以姓名排序 2-以职位排序
     checkAllFlag: false, //是否开启全选反选操作功能，点击时才开启
     checkAllType: false, //false-待全选 true-待反选
@@ -36,7 +23,8 @@ Page({
     placeholder: '搜索', 
     searchHeight: 0, //搜索栏高度，需要传入通讯录插件
     newFriendsPageUrl: '/pages/newFriends/newFriends', //新的朋友页面Url
-    groupPageUrl: '/pages/newFriends/newFriends?type=group'
+    groupPageUrl: '/pages/newFriends/newFriends?type=group',
+    companyPageUrl: '/pages/contacts/allUsers/allUsers',
   },
 
   /**
@@ -45,33 +33,40 @@ Page({
   onLoad: function (options) {
     that = this
     this.getContacts()
-    this.initstaffList()
-  },
-
-  getContacts: () => {
-    var data = app.globalData.contacts
-    // console.log(data)
-    if(data === null || data === undefined) {
-      app.contactsReadyCallback = res => {
-        data = res.data
-      }
-    }
-    setTimeout(() => {
+    .then((data) => {
       for (let index = 0; index < data.length; index++) {
         if (data[index].mobile == null) {
           data[index].mobile = ''
         }
         that.setData({
-          [`staffList[${index}].id`]: data[index].wx_openid,
-          [`staffList[${index}].name`]: data[index].wx_name,
+          [`staffList[${index}].id`]: data[index].friend_openid,
+          [`staffList[${index}].name`]: data[index].nickname,
           [`staffList[${index}].mobile`]: data[index].mobile,
           [`staffList[${index}].photo`]: data[index].avatarUrl,
           [`staffList[${index}].positionName`]: data[index].pid,
           [`staffList[${index}].checked`]: false,
-          [`staffList[${index}].openId`]: data[index].wx_openid
+          [`staffList[${index}].openId`]: data[index].friend_openid
         })
       }
-    }, 500);
+    })
+    .then(() => {
+      this.initstaffList()
+    })
+    .then(() => {
+      this.initBookList()
+    })
+  },
+
+  getContacts: () => {
+    return new Promise ((resolve) => {
+      var data = app.globalData.contacts
+      if(data === null || data === undefined) {
+        app.contactsReadyCallback = res => {
+          data = res.data
+        }
+      }
+      resolve(data)
+    })
   },
 
   /**
@@ -81,30 +76,21 @@ Page({
   changeSortType: function (e) {
     var that = this
     wx.showActionSheet({
-      itemList: ['添加联系人','以姓名排序','以职位排序','建 立 群 聊'],
+      itemList: ['添加联系人','建 立 群 聊'],
       success(res) {
         // console.log(res.tapIndex)
         if (res.tapIndex == 0) {
           wx.navigateTo({
             url: '/pages/staffList/staffList',
           })
-        } else if (res.tapIndex == 3) {
+        } else {
           that.setData({
             checkType: 'checkbox'
           });
           wx.setNavigationBarTitle({
             title: '选择好友建立群聊',
           })
-        } else {
-          if (res.tapIndex != that.data.sortType){
-            that.setData({
-              sortType: res.tapIndex,
-            })
-            //重新初始化
-            that.onPullDownRefresh()
-          }
         }
-        
       },
       fail(res) {
         console.log(res.errMsg)
@@ -194,24 +180,24 @@ Page({
    * 初始化联系人列表
    */
   initstaffList: function () {
-    // 初始化联系人列表
-    let staffList = this.data.staffList
-    // 所有联系人照片
-    let staffPhotoList = []
-    staffList.map(item => {
-      staffPhotoList.push(item.photo)
+    return new Promise((resolve) => {
+      that = this
+      // 初始化联系人列表
+      let staffList = this.data.staffList
+      // 所有联系人照片
+      let staffPhotoList = []
+      staffList.map(item => {
+        staffPhotoList.push(item.photo)
+      })
+      //更新数据结果
+      this.setData({
+        staffList: staffList,
+        staffPhotoList: staffPhotoList,
+        searchFocus: false,
+        searchText: '',
+        staffList_search: [],
+      })
     })
-    //更新数据结果
-    this.setData({
-      staffList: staffList,
-      staffPhotoList: staffPhotoList,
-      searchFocus: false,
-      searchText: '',
-      staffList_search: [],
-    })
-    //初始化通讯录列表
-    this.initBookList()
-    wx.stopPullDownRefresh()
   },
 
   //初始化数据源，并初始化通讯录列表
@@ -263,7 +249,7 @@ Page({
     var that = this
     // console.log(item)
     wx.showActionSheet({
-      itemList: ['发送消息','复制名称','预览照片'],
+      itemList: ['发送消息','复制名称'],
       success(res) {
         if (res.tapIndex == 0) {//发送消息
           wx.navigateTo({
@@ -280,14 +266,8 @@ Page({
               })
             }
           })
-        } else if (res.tapIndex == 2 && item.photo) {//预览图片
-          wx.previewImage({
-            current: item.photo,
-            urls: that.data.staffPhotoList,
-            fail: function (res) {
-              //console.log('previewImage fail', res)
-            },
-          })
+        } else {
+
         }
       },
       fail(res) {

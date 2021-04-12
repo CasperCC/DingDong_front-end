@@ -140,6 +140,7 @@ Page({
     that.setData({
       isShowConfirm: false
     })
+    that.updateGroupName()
   },
 
   updateGroupName: function () {
