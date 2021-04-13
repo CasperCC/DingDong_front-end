@@ -31,34 +31,12 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
+  async onLoad() {
     that = this
-    this.getAllUsers()
-    .then(data => {
-      for (let index = 0; index < data.length; index++) {
-        if (data[index].mobile == null) {
-          data[index].mobile = ''
-        }
-        that.setData({
-          [`staffList[${index}].id`]: data[index].wx_openid,
-          [`staffList[${index}].name`]: data[index].wx_name,
-          [`staffList[${index}].mobile`]: data[index].mobile,
-          [`staffList[${index}].photo`]: data[index].avatarUrl,
-          [`staffList[${index}].positionName`]: data[index].pid,
-          [`staffList[${index}].checked`]: false,
-          [`staffList[${index}].openId`]: data[index].wx_openid
-        })
-      }
-      return data
-    })
-    .then(data => {
-      return this.initstaffList()
-    })
-    .then((res) => {
-      if (res) {
-        this.initBookList()
-      }
-    })
+    var contact = that.getAllUsers()
+    await that.contactProcessing(contact)
+    await that.initstaffList()
+    that.initBookList()
   },
 
   getAllUsers: () => {
@@ -74,6 +52,26 @@ Page({
           resolve(res.data)
         }
       })
+    })
+  },
+
+  contactProcessing: function (data) {
+    return new Promise((resolve) => {
+      for (let index = 0; index < data.length; index++) {
+        if (data[index].mobile == null) {
+          data[index].mobile = ''
+        }
+        that.setData({
+          [`staffList[${index}].id`]: data[index].wx_openid,
+          [`staffList[${index}].name`]: data[index].wx_name,
+          [`staffList[${index}].mobile`]: data[index].mobile,
+          [`staffList[${index}].photo`]: data[index].avatarUrl,
+          [`staffList[${index}].positionName`]: data[index].pid,
+          [`staffList[${index}].checked`]: false,
+          [`staffList[${index}].openId`]: data[index].wx_openid
+        })
+      }
+      resolve(true)
     })
   },
 

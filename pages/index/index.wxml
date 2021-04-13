@@ -1,36 +1,38 @@
-<!--私信消息列表-->
-<scroll-view scroll-y="true" class="message-list" enable-flex="true">
-  <block wx:for='{{newsList}}' wx:key='key'>
-    <!--示例用户1-->
-    <view class='user' bindtap='goToChatPage' data-item='{{item}}'>
-    <image class='header-icon' src='{{item.avatarUrl}}'></image>
-    <view class='user-content'>
-      <view class='msgline'>
-        <view class='apart'>
-        <view class='username'>
-          <text>{{item.nickName}}</text>
+<view wx:if="{{newsList==null}}" style="margin-top: 100rpx; text-align: center;">
+  还没有聊天记录，快进入通讯录进行聊天吧~~~
+</view>
+<block wx:else>
+  <!--私信消息列表-->
+  <scroll-view scroll-y="true" class="message-list" enable-flex="true">
+    <block wx:for='{{newsList}}' wx:key='key'>
+      <!--示例用户1-->
+      <view class='user' bindtap='goToChatPage' data-item='{{item}}'>
+      <image class='header-icon' src='{{item.avatarUrl}}'></image>
+      <view class='user-content'>
+        <view class='msgline'>
+          <view class='apart'>
+          <view class='username'>
+            <text>{{item.nickName}}</text>
+          </view>
+          </view>
+          <view class='time'>
+            <view class='time-num'>{{item.lastTime}}</view>
+          </view>
         </view>
-        </view>
-        <view class='time'>
-          <view class='time-num'>{{item.lastTime}}</view>
-        </view>
-      </view>
-      <view class='msgline'>
-        <view class='dialog'>
-        <text>{{item.lastMsg}}</text>
-        </view>
-        <view class='dialog-nums' wx:if='{{item.unReadNum}}'>
-          <view class='bubble'>
-            <view class='num'>{{item.unReadNum}}</view>
+        <view class='msgline'>
+          <view class='dialog'>
+          <text>{{item.lastMsg}}</text>
+          </view>
+          <view class='dialog-nums' wx:if='{{item.unReadNum}}'>
+            <view class='bubble'>
+              <view class='num'>{{item.unReadNum}}</view>
+            </view>
           </view>
         </view>
       </view>
-    </view>
-    </view>
-    <!--分割线-->
-    <view class='liner'></view>
-  </block>
-</scroll-view>
-<view wx:if="{{newsList=='[]'}}" style="margin-top: 100rpx; text-align: center;">
-  还没有聊天记录，快进入通讯录进行聊天吧~~~
-</view>
+      </view>
+      <!--分割线-->
+      <view class='liner'></view>
+    </block>
+  </scroll-view>
+</block>

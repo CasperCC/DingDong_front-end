@@ -1,15 +1,17 @@
 {
   "description": "项目配置文件",
   "packOptions": {
-    "ignore": [{
-      "type": "file",
-      "value": "/env.txt"
-    }]
+    "ignore": [
+      {
+        "type": "file",
+        "value": "/env.txt"
+      }
+    ]
   },
   "setting": {
-    "urlCheck": false,
-    "es6": true,
-    "enhance": true,
+    "urlCheck": true,
+    "es6": false,
+    "enhance": false,
     "postcss": true,
     "preloadBackgroundData": false,
     "minified": true,

@@ -4,11 +4,7 @@ const app = getApp()
 
 Page({
   data: {
-    motto: 'Hello World',
-    userInfo: {},
-    hasUserInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo'),
-    newsList: []
+    newsList: null
   },
   // 事件处理函数
   goToChatPage(e) {
@@ -25,53 +21,36 @@ Page({
     }
     
   },
-  onLoad() {
-    if (app.globalData.userInfo) {
-      this.setData({
-        userInfo: app.globalData.userInfo,
-        hasUserInfo: true
-      })
-    } else if (this.data.canIUse) {
-      // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-      // 所以此处加入 callback 以防止这种情况
-      app.userInfoReadyCallback = res => {
-        this.setData({
-          userInfo: res.userInfo,
-          hasUserInfo: true
-        })
-      }
-    } else {
-      // 在没有 open-type=getUserInfo 版本的兼容处理
-      wx.getUserInfo({
-        success: res => {
-          app.globalData.userInfo = res.userInfo
-          this.setData({
-            userInfo: res.userInfo,
-            hasUserInfo: true
-          })
-        }
-      })
-    }
+  async onLoad() {
+    var that = this
+    var inter = await that.getSocket()
+    clearInterval(inter)
+    that.getNewsList()
   },
   onShow() {
-    if (app.globalData.userInfo) {
-      setInterval(() => {
-        this.getNewsList()
-      }, 1000);
-    } else {
-      setTimeout(() => {
-        if (app.globalData.userInfo) {
-          setInterval(() => {
-            this.getNewsList()
-          }, 1000)
-        } else {
-          app.toastSuccess('您未登录或网络超时!')
-          wx.redirectTo({
-            url: '/pages/login/login',
-          })
-        }
-      }, 2000)
+    var that = this
+    if (app.config.socket.id) {
+      that.getNewsList()
     }
+    app.watch(that.recGroup, 'recGroup')
+    app.watch(that.recUser, 'recUser')
+  },
+  getSocket: function () {
+    return new Promise((resolve) => {
+      var inter = setInterval(() => {
+        if (app.config.socket.id) {
+          resolve(inter)
+        }
+      }, 1000)
+    })
+  },
+  recGroup: function () {
+    var that = this
+    that.getNewsList()
+  },
+  recUser: function () {
+    var that = this
+    that.getNewsList()
   },
   getUserInfo(e) {
     // console.log(e)

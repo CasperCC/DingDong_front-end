@@ -1,43 +1,48 @@
 // app.js
-var that = this
+const regeneratorRuntime = require('./utils/runtime.min')
+const io = require('/utils/weapp.socket.io')
+var that
 App({
+  /**
+   * 小程序相关配置
+   */
+  config: {
+    // serverUrl: 'http://127.0.0.1:7001',
+    serverUrl: 'https://cochan.tech',
+    uploadUrl: 'https://oss.cochan.tech',
+    imageOssPath: 'DingDong/images/',
+    fileOssPath: 'DingDong/files/',
+    socket: {}
+  },
+  /**
+   * 全局变量
+   */
+  globalData: {
+    code: null,
+    userInfo: null,
+    contacts: null,
+    recUser: null,
+    recGroup: null,
+  },
+
   onLaunch() {
     that = this
-    this.getUserInfo(that)
-    .then(() => {
-      return this.login()
-    })
-    .then(code => {
-      return this.socketStart(code)
-    })
-    .then(data => {
-      const {code, socket} = data
-      this.config.socket = socket
-      this.checkUserInfo(code, socket)
-    })
-    .then(() => {
-      this.getContacts()
-    })
-    
-    // let index = '开发环境'
-    // let NODE_ENV = 'pro';
-    // const fileManager = wx.getFileSystemManager();
-    // try{
-    //   fileManager.accessSync('./env.txt');
-    //   NODE_ENV = 'dev';
-    // }catch(e){}
-    // if( NODE_ENV === 'pro' ){
-    //   that.globalData.serverUrl = 'https://cochan.tech';
-    // }else{
-    //   that.globalData.serverUrl = 'http://127.0.0.1:7001';
-    // }
+    that.appStart()
+  },
+
+  async appStart() {
+    await that.getUserInfo()
+    var code = await that.getLoginCode()
+    await that.socketStart(code)
+    console.log(that.config.socket.id)
+    await that.checkUserInfo()
   },
 
   /**
    * 获取userinfo
    */
-  getUserInfo: (that) => {
-    return new Promise((resolve, reject) => {
+  getUserInfo: () => {
+    return new Promise((resolve) => {
       if (that.globalData.userInfo) {
         resolve(that.globalData.userInfo)
       }
@@ -47,105 +52,78 @@ App({
   /**
    * socket连接
    */
-  socketStart: code => {
-    return new Promise((resolve, reject) => {
-      const io = require('/utils/weapp.socket.io')
+  async socketStart(code) {
+    return new Promise((resolve) => {
       const socket = io(that.config.serverUrl, { query: 'code='+code, 'reconnect': true })
-      socket.on('reconnect', data => {
-        console.log('reconnect')
-        that.login().then(code => {
-          socket.emit('reconnection', {
-            code: code
-          })
+      // 重连事件
+      socket.on('reconnect', () => {
+        var newCode = that.getLoginCode()
+        socket.emit('reconnection', {
+          code: newCode
         })
+        console.log('reconnect')
       })
+
+      // 服务器报错事件
       socket.on('error', err => {
         console.log(err)
-        that.onLaunch()
+        // that.appStart()
       })
-      socket.on('connect', data => {
+
+      // 连接事件
+      socket.on('connect', () => {
         console.log('connect')
+        that.config.socket = socket
+        resolve(socket)
       })
-      socket.on('disconnect', res => {
+
+      // 断开连接事件
+      socket.on('disconnect', () => {
         console.log('disconnect')
       })
+
+      // 接收私聊事件
       socket.on('receiveMsg', recUser => {
-        // console.log('recUser', recUser)
         that.globalData.recUser = recUser
       })
+
+      // 接收群聊事件
       socket.on('receiveMsgGroup', recGroup => {
-        // console.log('recGroup', recGroup)
         that.globalData.recGroup = recGroup
       })
-      resolve({code, socket})
+
     })
   },
 
-  checkUserInfo: (code, socket) => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        console.log(socket.id)
-        wx.request({
-          url: that.config.serverUrl + '/api/checkUserInfo',
-          method: 'POST',
-          data: {
-            code: code,
-            nickName: that.globalData.userInfo.nickName,
-            avatarUrl: that.globalData.userInfo.avatarUrl,
-            clientId: socket.id
-          },
-          dataType: 'json',
-          header: {
-            'content-type': 'application/json'
-          },
-          success: data => {
-            console.log(data.data)
-          },
-          fail: err => {
-            console.log(err)
-          }
-        })
-      }, 1500)
+  checkUserInfo: () => {
+    return new Promise(() => {
+      wx.request({
+        url: that.config.serverUrl + '/api/checkUserInfo',
+        method: 'POST',
+        data: {
+          nickName: that.globalData.userInfo.nickName,
+          avatarUrl: that.globalData.userInfo.avatarUrl,
+          clientId: that.config.socket.id
+        },
+        dataType: 'json',
+        success: data => {
+          console.log(data.data)
+        }
+      })
     })
   },
 
   /**
    * 获取登录唯一凭证code
    */
-  login: () => {
-    return new Promise((resolve, reject) => {
+  getLoginCode: () => {
+    return new Promise((resolve) => {
       wx.login({
         success: res => {
           resolve(res.code)
         }
       })
     })
-  },
-
-  /**
-   * 获取通讯录
-   */
-  getContacts: () => {
-    setTimeout(() => {
-      wx.request({
-        url: that.config.serverUrl + '/api/getContacts',
-        method: 'POST',
-        dataType: 'json',
-        data: {
-          clientId: that.config.socket.id
-        },
-        success(res) {
-          that.globalData.contacts = res.data
-          // console.log(res)
-          if(that.contactsReadyCallback) {
-            that.contactsReadyCallback(res)
-          }
-        },
-        fail: err => {
-          console.log(err)
-        }
-      })
-    }, 1500)
   },
   
   /**
@@ -179,24 +157,5 @@ App({
         return this._param
       }
     })
-  },
-  
-  // 小程序相关配置
-  config: {
-    serverUrl: 'http://127.0.0.1:7001',
-    // serverUrl: 'https://cochan.tech',
-    uploadUrl: 'https://oss.cochan.tech',
-    imageOssPath: 'DingDong/images/',
-    fileOssPath: 'DingDong/files/',
-    socket: {}
-  },
-
-  // 全局变量
-  globalData: {
-    code: null,
-    userInfo: null,
-    contacts: null,
-    recUser: null,
-    recGroup: null,
   }
 })

@@ -1,10 +1,6 @@
-// 联系人通讯录
-//获取应用实例
 const app = getApp()
-//引入汉字转拼音插件
 var pinyin = require("../../utils/pinyin/web-pinyin.js")
-//此页全局即时搜索状态
-var inputTimeout = null
+var inputTimeout = null  //此页全局即时搜索状态
 var that
 
 Page({
@@ -30,10 +26,16 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
+  async onLoad() {
     that = this
-    this.getContacts()
-    .then((data) => {
+    var contact = await that.getContacts()
+    await that.contactProcessing(contact)
+    await that.initstaffList()
+    that.initBookList()
+  },
+  
+  contactProcessing: function (data) {
+    return new Promise((resolve) => {
       for (let index = 0; index < data.length; index++) {
         if (data[index].mobile == null) {
           data[index].mobile = ''
@@ -48,24 +50,30 @@ Page({
           [`staffList[${index}].openId`]: data[index].friend_openid
         })
       }
-    })
-    .then(() => {
-      this.initstaffList()
-    })
-    .then(() => {
-      this.initBookList()
+      resolve(true)
     })
   },
 
+  /**
+   * 获取通讯录
+   */
   getContacts: () => {
-    return new Promise ((resolve) => {
-      var data = app.globalData.contacts
-      if(data === null || data === undefined) {
-        app.contactsReadyCallback = res => {
-          data = res.data
+    return new Promise((resolve, reject) => {
+      wx.request({
+        url: app.config.serverUrl + '/api/getContacts',
+        method: 'POST',
+        dataType: 'json',
+        data: {
+          clientId: app.config.socket.id
+        },
+        success(res) {
+          resolve(res.data)
+        },
+        fail(err) {
+          console.log(err)
+          reject(false)
         }
-      }
-      resolve(data)
+      })
     })
   },
 
@@ -197,6 +205,7 @@ Page({
         searchText: '',
         staffList_search: [],
       })
+      resolve(true)
     })
   },
 
