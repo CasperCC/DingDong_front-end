@@ -33,7 +33,7 @@ Page({
    */
   async onLoad() {
     that = this
-    var contact = that.getAllUsers()
+    var contact = await that.getAllUsers()
     await that.contactProcessing(contact)
     await that.initstaffList()
     that.initBookList()
@@ -85,7 +85,7 @@ Page({
       itemList: ['建 立 群 聊'],
       success(res) {
         // console.log(res.tapIndex)
-        if (res.tapIndex == 1) {
+        if (res.tapIndex == 0) {
           that.setData({
             checkType: 'checkbox'
           });

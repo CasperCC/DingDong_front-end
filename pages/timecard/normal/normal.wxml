@@ -20,7 +20,7 @@
           <view class="weui-cell__bd">
             
             <picker name="type" bindchange="bindPickerChange" value="{{checkType[0].id}}" range="{{checkType}}" range-key="msg">
-              <view class="weui-input">{{checkType[0].msg}}</view>
+              <view class="weui-input">{{checkType[index].msg}}</view>
             </picker>
 
           </view>
