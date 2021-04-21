@@ -1,0 +1,3 @@
+/* pages/userInfomation/userProfile/userProfile.wxss */
+@import "../userInfomation.wxss";
+@import "../../mine/mine.wxss";

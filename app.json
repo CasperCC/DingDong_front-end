@@ -18,7 +18,8 @@
     "pages/notice/announce/announce",
     "pages/reply/overwork/overwork",
     "pages/reply/vacation/vacation",
-    "pages/contacts/allUsers/allUsers"
+    "pages/contacts/allUsers/allUsers",
+    "pages/userInfomation/userProfile/userProfile"
   ],
   "permission": {
     "scope.userLocation": {

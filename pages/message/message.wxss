@@ -55,6 +55,13 @@ input {
 
 .imgMsg {
   max-width: 500rpx;
+  max-height: 700rpx;
+  border-radius: 10rpx;
+}
+
+.videoMsg {
+  max-width: 600rpx;
+  max-height: 700rpx;
   border-radius: 10rpx;
 }
 

@@ -17,13 +17,14 @@ Page({
     placeholder: '请输入昵称/手机号/邮箱', 
     placeholder_active: '',
     searchHeight: 0, //搜索栏高度，需要传入通讯录插件
-    searchInput: ''
+    searchInput: '',
+    openId: null
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
+  async onLoad(options) {
     that = this
     this.initstaffList()
     // console.log(options.apply)
@@ -39,6 +40,7 @@ Page({
         title: '添加联系人',
       })
     }
+    that.data.openId = await that.getProfile()
   },
 
   searchInput: function(e) {
@@ -47,17 +49,40 @@ Page({
     })
   },
 
-  searchSubmit: function(e) {
+  async getProfile() {
+    return new Promise((resolve) => {
+      var that = this
+      wx.request({
+        url: app.config.serverUrl + '/api/getProfile',
+        method: 'POST',
+        dataType: 'json',
+        data: {
+          clientId: app.config.socket.id
+        },
+        success: res => {
+          resolve(res.data.wx_openid)
+        }
+      })
+    })
+  },
+
+  searchSubmit: function() {
     // console.log(this.data.searchInput)
+    var that = this
     wx.request({
       url: app.config.serverUrl + '/api/addContacts_search',
       method: 'POST',
       data: {
-        content: this.data.searchInput
+        content: that.data.searchInput
       },
       dataType: 'json',
       success: res => {
         var data = res.data
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].wx_openid == that.data.openId) {
+            data.splice(i, 1)
+          }
+        }
         for (let index = 0; index < data.length; index++) {
           if (data[index].mobile == null) {
             data[index].mobile = ''

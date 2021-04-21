@@ -25,7 +25,11 @@
           <image class="imgMsg" src="{{item.content}}" mode="widthFix" bindtap='previewProfilePhoto' data-img="{{item.content}}"></image>
         </view>
       </block>
-      <block wx:else></block>
+      <block wx:else>
+        <view class="imgMsgContent">
+          <video src="{{item.content}}" class="videoMsg"></video>
+        </view>
+      </block>
     </view>
 
     <!-- 单个消息2 用户发出（右） -->
@@ -41,7 +45,11 @@
           <image class="imgMsg" src="{{item.content}}" mode="widthFix" bindtap='previewProfilePhoto' data-img="{{item.content}}"></image>
         </view>
       </block>
-      <block wx:else></block>
+      <block wx:else>
+        <view class="imgMsgContent">
+          <video src="{{item.content}}" class="videoMsg"></video>
+        </view>
+      </block>
       <view style='width: 11vw; height: 11vw;'>
         <image style='width: 11vw; height: 11vw; border-radius: 10rpx;' src='{{myHeadIcon}}'></image>
       </view>

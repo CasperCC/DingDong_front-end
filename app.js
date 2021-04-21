@@ -11,7 +11,7 @@ App({
     serverUrl: 'https://cochan.tech',
     uploadUrl: 'https://oss.cochan.tech',
     imageOssPath: 'DingDong/images/',
-    fileOssPath: 'DingDong/files/',
+    vedioOssPath: 'DingDong/vedios/',
     socket: {}
   },
   /**

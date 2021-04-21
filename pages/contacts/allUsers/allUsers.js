@@ -33,8 +33,9 @@ Page({
    */
   async onLoad() {
     that = this
+    var myOpenId = await this.getProfile()
     var contact = await that.getAllUsers()
-    await that.contactProcessing(contact)
+    await that.contactProcessing(contact, myOpenId)
     await that.initstaffList()
     that.initBookList()
   },
@@ -55,8 +56,13 @@ Page({
     })
   },
 
-  contactProcessing: function (data) {
+  contactProcessing: function (data, myOpenId) {
     return new Promise((resolve) => {
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].wx_openid == myOpenId) {
+          data.splice(i, 1)
+        }
+      }
       for (let index = 0; index < data.length; index++) {
         if (data[index].mobile == null) {
           data[index].mobile = ''
@@ -252,13 +258,17 @@ Page({
     var that = this
     // console.log(item)
     wx.showActionSheet({
-      itemList: ['发送消息','复制名称'],
+      itemList: ['发送消息','添加好友'],
       success(res) {
-        if (res.tapIndex == 0) {//发送消息
+        if (res.tapIndex === 0) {//发送消息
           wx.navigateTo({
             url: '/pages/message/message?openId='+item.openId+'&nickName='+item.name+'&avatarUrl='+item.photo
           })
-        } else if (res.tapIndex == 1 && item.name) {//复制名称
+        } else if (res.tapIndex === 1) {
+          wx.navigateTo({
+            url: '/pages/sendVerification/sendVerification?oppOpenId='+item.openId
+          })
+        } else {//复制名称
           wx.setClipboardData({
             data: item.name,
             success(res) {
@@ -269,13 +279,28 @@ Page({
               })
             }
           })
-        } else {
-
         }
       },
       fail(res) {
         // console.log(res.errMsg)
       }
+    })
+  },
+
+  async getProfile() {
+    return new Promise((resolve) => {
+      var that = this
+      wx.request({
+        url: app.config.serverUrl + '/api/getProfile',
+        method: 'POST',
+        dataType: 'json',
+        data: {
+          clientId: app.config.socket.id
+        },
+        success: res => {
+          resolve(res.data.wx_openid)
+        }
+      })
     })
   },
 

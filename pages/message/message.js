@@ -1,5 +1,6 @@
 // pages/message/message.js
 const app = getApp()
+const util = require('../../utils/util.js')
 var that, message, socket, options, status
 var inputVal = ''
 var msgList = []
@@ -273,56 +274,92 @@ Page({
   sendContent: function (e) {
     var that = this
     wx.showActionSheet({
-      itemList: ['发送图片', '发送文件'],
+      itemList: ['发送图片', '发送视频'],
       success: function (res) {
         if (res.tapIndex == 0) {
           that.sendImage()
         } else {
-          that.sendFile()
+          that.sendVideo()
         }
       }
     })
   },
 
-  sendImage: function () {
+  async sendImage() {
     var that = this
-    that.getUploadParams().then(options => {
-      wx.chooseImage({
-        count: 9,
-        sizeType: ['original', 'compressed'],
-        sourceType: ['album', 'camera'],
-        success: res => {
-          // tempFilePath可以作为img标签的src属性显示图片
-          const tempFilePaths = res.tempFilePaths
-          for (let i = 0; i < tempFilePaths.length; i++) {
-            that.uploadToOss(options, tempFilePaths[i], 2).then(url => {
-              msgList.push({
-                speaker: 'me',
-                contentType: 2,
-                content: url
-              })
-              that.data.imageList.push(url)
-              that.setData({
-                msgList: msgList,
-                toView: 'msg-' + (msgList.length - 1)
-              })
-            })
-          }
+    var options = await that.getUploadParams()
+    wx.chooseImage({
+      count: 9,
+      sizeType: ['original', 'compressed'],
+      sourceType: ['album', 'camera'],
+      async success(res) {
+        // tempFilePath可以作为img标签的src属性显示图片
+        var tempFilePaths = res.tempFilePaths
+        for (let i = 0; i < tempFilePaths.length; i++) {
+          msgList.push({
+            speaker: 'me',
+            contentType: 2,
+            content: tempFilePaths[i]
+          })
+          that.data.imageList.push(tempFilePaths[i])
+          that.setData({
+            msgList: msgList,
+            toView: 'msg-' + (msgList.length - 1)
+          })
+          wx.showLoading({
+            title: '发送中',
+          })
+          await that.uploadToOss(options, tempFilePaths[i], 2)
+          wx.hideLoading()
+          wx.showToast({
+            title: '发送成功',
+            icon: 'success',
+            duration: 1000
+          })
         }
-      })
+      }
     })
   },
 
-  sendFile: function () {
-    
+  async sendVideo() {
+    var that = this
+    var options = await that.getUploadParams()
+    wx.chooseMedia({
+      mediaType: ['video'],
+      maxDuration: 60,
+      async success(res) {
+        var tempFiles = res.tempFiles
+        for (let i = 0; i < tempFiles.length; i++) {
+          msgList.push({
+            speaker: 'me',
+            contentType: 3,
+            content: tempFiles[i].tempFilePath
+          })
+          that.setData({
+            msgList: msgList,
+            toView: 'msg-' + (msgList.length - 1)
+          })
+          wx.showLoading({
+            title: '发送中',
+          })
+          await that.uploadToOss(options, tempFiles[i].tempFilePath, 3)
+          wx.hideLoading()
+          wx.showToast({
+            title: '发送成功',
+            icon: 'success',
+            duration: 1000
+          })
+        }
+      }
+    })
   },
 
   uploadToOss: function (options, tempFilePaths, type) {
     return new Promise((resolve) => {
       var d = new Date();
-      var date = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()+'/';
-      const path = type === 2 ? app.config.imageOssPath : app.config.fileOssPath
-      const key = path+date+tempFilePaths.substring(11, 60)
+      var date = util.formatDate(d)
+      const path = type === 2 ? app.config.imageOssPath : app.config.vedioOssPath
+      const key = path+date+'/'+tempFilePaths.substring(11)
       wx.uploadFile({
         filePath: tempFilePaths,
         name: 'file',
@@ -339,22 +376,26 @@ Page({
               socket.emit('sendMsgGroup', {
                 target: that.options.groupId,
                 msg: key,
-                type: 2
+                type: type
               })
             } else {
               socket.emit('sendMsg', {
                 target: that.options.openId,
                 msg: key,
-                type: 2
+                type: type
               })
             }
-            app.toastSuccess('发送成功！')
-            that.getOssUrl(key).then(url => {
-              resolve(url)
-            })
+            resolve(true)
           }
         },
         fail: err => {
+          that.setData({
+            loadingHidden: true
+          })
+          wx.showToast({
+            title: '发送失败,请检查网络设置！',
+            duration: 1000
+          })
           console.log(err)
         }
       })

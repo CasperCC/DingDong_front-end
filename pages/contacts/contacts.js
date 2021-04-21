@@ -40,9 +40,10 @@ Page({
         if (data[index].mobile == null) {
           data[index].mobile = ''
         }
+        var nickname = data[index].nickname ? data[index].nickname : data[index].wx_name
         that.setData({
           [`staffList[${index}].id`]: data[index].friend_openid,
-          [`staffList[${index}].name`]: data[index].nickname,
+          [`staffList[${index}].name`]: nickname,
           [`staffList[${index}].mobile`]: data[index].mobile,
           [`staffList[${index}].photo`]: data[index].avatarUrl,
           [`staffList[${index}].positionName`]: data[index].pid,
@@ -258,13 +259,17 @@ Page({
     var that = this
     // console.log(item)
     wx.showActionSheet({
-      itemList: ['发送消息','复制名称'],
+      itemList: ['发送消息','查看简介'],
       success(res) {
-        if (res.tapIndex == 0) {//发送消息
+        if (res.tapIndex === 0) {//发送消息
           wx.navigateTo({
             url: '/pages/message/message?openId='+item.openId+'&nickName='+item.name+'&avatarUrl='+item.photo
           })
-        } else if (res.tapIndex == 1 && item.name) {//复制名称
+        } else if (res.tapIndex === 1) {
+          wx.navigateTo({
+            url: '/pages/userInfomation/userProfile/userProfile?oppOpenId='+item.openId+'&nickName='+item.name
+          })
+        } else {//复制名称
           wx.setClipboardData({
             data: item.name,
             success(res) {
@@ -275,8 +280,6 @@ Page({
               })
             }
           })
-        } else {
-
         }
       },
       fail(res) {
@@ -413,8 +416,12 @@ Page({
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function () {
-    
+  async onShow() {
+    that = this
+    var contact = await that.getContacts()
+    await that.contactProcessing(contact)
+    await that.initstaffList()
+    that.initBookList()
   },
 
   /**

@@ -1,0 +1,74 @@
+<!--pages/userInfomation/userProfile/userProfile.wxml-->
+<!--pages/mine/mine.wxml-->
+<!--用户头像和昵称-->
+<view class="userInformation">
+  <image src="{{userInfo.avatarUrl}}" class="userInfomation-avatar"  bindtap="previewProfilePhoto" data-icon="{{userInfo.avatarUrl}}"></image>
+  <view class="msgLine">
+    <view class="userInformation-nickname">
+      {{nickName}}
+    </view>
+  </view>
+</view>
+<view class="verification" style="height: 50rpx;"></view>
+<view class="graydivide"></view>
+<view class="graydivide"></view>
+<!--职位-->
+<view class='function1'>
+  <view class="functioninformation"><!--左边图片&文字-->
+    <view class="left-icon"><!--图片-->
+      <image class="icon-picture" src="/utils/resources/icons/position.png"></image>
+    </view>
+    <view class="text">职位：</view><!--文字-->
+    <view class="description">{{userInfo.pid}}</view>
+  </view>
+</view>
+<!--间隔白横线-->
+<view class="whitedivide"></view>
+<!--部门-->
+<view class='function1'>
+  <view class="functioninformation"><!--左边图片&文字-->
+    <view class="left-icon"><!--图片-->
+      <image class="icon-picture" src="/utils/resources/icons/belong.png"></image>
+    </view>
+    <view class="text">部门：</view><!--文字-->
+    <view class="description">{{userInfo.belong_id}}</view>
+  </view>
+</view>
+<view class="graydivide" style="height: 200rpx;"></view>
+<button type="primary" style="width: 100%" disabled="{{isAgree}}" bindtap="sendMsg">发送消息</button>
+<view class="graydivide"></view>
+<view class="graydivide"></view>
+<button type="default" style="width: 100%;color:black" bindtap="callNickNameButton">设置对方备注</button>
+<view class="graydivide"></view>
+<view class="graydivide"></view>
+<view class="graydivide"></view>
+<view class="graydivide"></view>
+<view wx:if="{{isBlackList==0}}" class="blackList" bindtap="setBlackList">加入黑名单</view>
+<view wx:elif="{{isBlackList==1}}" class="blackList" bindtap="pullOutBlackList">拉出黑名单</view>
+<view wx:else></view>
+
+<!-- 设置对方备注弹窗 -->
+<block wx:if="{{isShowConfirm}}">
+  <view class='toast-box'>
+    <view class='toastbg'></view>
+    <view class='showToast'>
+        <view class='toast-title'>
+            <text>设置对方备注</text>
+        </view>
+        <view class='toast-main'>
+            <view class='toast-input'>
+                <input type='text' placeholder='输入备注名称' bindinput='setValue'></input>
+            </view>
+        </view>
+        <view class='toast-button'>
+            <view class='button1'>
+                <button catchtap='cancel' style="width:100%">取消</button>
+            </view>
+            <view class='button2'>
+                <button catchtap='confirmAcceptance' style="width:100%">确定</button>
+            </view>
+        </view>
+    </view>
+  </view>
+</block>
+
