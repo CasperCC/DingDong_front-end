@@ -129,7 +129,6 @@ Page({
       dataType: 'json',
       method: 'POST',
       success: (res) => {
-        console.log(res.data)
         if (res.data.data[0].is_blackList == 0) {
           that.setData({
             isAgree: false,

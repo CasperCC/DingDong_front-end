@@ -1,6 +1,9 @@
+//获取应用实例
 const app = getApp()
-var pinyin = require("../../utils/pinyin/web-pinyin.js")
-var inputTimeout = null  //此页全局即时搜索状态
+//引入汉字转拼音插件
+var pinyin = require("../../../utils/pinyin/web-pinyin.js")
+//此页全局即时搜索状态
+var inputTimeout = null
 var that
 
 Page({
@@ -10,7 +13,7 @@ Page({
     checkAllType: false, //false-待全选 true-待反选
     staffList:[],
     staffChooseList: [],
-    staffList_search: [],
+    staffList_search: [/*搜索联系人列表*/],
     sortType: 1, //排序类型，默认1-以姓名排序 2-以职位排序
     checkAllFlag: false, //是否开启全选反选操作功能，点击时才开启
     checkAllType: false, //false-待全选 true-待反选
@@ -20,8 +23,7 @@ Page({
     searchHeight: 0, //搜索栏高度，需要传入通讯录插件
     newFriendsPageUrl: '/pages/newFriends/newFriends', //新的朋友页面Url
     groupPageUrl: '/pages/newFriends/newFriends?type=group',
-    companyPageUrl: '/pages/contacts/allUsers/allUsers',
-    blackListPageUrl: '/pages/contacts/blackList/blackList'
+    companyPageUrl: '/pages/contacts/allUsers',
   },
 
   /**
@@ -29,53 +31,47 @@ Page({
    */
   async onLoad() {
     that = this
-    var contact = await that.getContacts()
+    var contact = await that.getBlackList()
     await that.contactProcessing(contact)
     await that.initstaffList()
     that.initBookList()
   },
-  
+
+  getBlackList: () => {
+    return new Promise ((resolve) => {
+      wx.request({
+        url: app.config.serverUrl + '/api/getBlackList',
+        method: 'POST',
+        dataType: 'json',
+        data: {
+          clientId: app.config.socket.id
+        },
+        success: res => {
+          console.log(res.data)
+          resolve(res.data)
+        }
+      })
+    })
+  },
+
   contactProcessing: function (data) {
     return new Promise((resolve) => {
       for (let index = 0; index < data.length; index++) {
         if (data[index].mobile == null) {
           data[index].mobile = ''
         }
-        var nickname = data[index].nickname ? data[index].nickname : data[index].wx_name
+        var name = data[index].nickname == null ? data[index].wx_name : data[index].nickname
         that.setData({
-          [`staffList[${index}].id`]: data[index].friend_openid,
-          [`staffList[${index}].name`]: nickname,
+          [`staffList[${index}].id`]: data[index].wx_openid,
+          [`staffList[${index}].name`]: name,
           [`staffList[${index}].mobile`]: data[index].mobile,
           [`staffList[${index}].photo`]: data[index].avatarUrl,
           [`staffList[${index}].positionName`]: data[index].pid,
           [`staffList[${index}].checked`]: false,
-          [`staffList[${index}].openId`]: data[index].friend_openid
+          [`staffList[${index}].openId`]: data[index].wx_openid
         })
       }
       resolve(true)
-    })
-  },
-
-  /**
-   * 获取通讯录
-   */
-  getContacts: () => {
-    return new Promise((resolve, reject) => {
-      wx.request({
-        url: app.config.serverUrl + '/api/getContacts',
-        method: 'POST',
-        dataType: 'json',
-        data: {
-          clientId: app.config.socket.id
-        },
-        success(res) {
-          resolve(res.data)
-        },
-        fail(err) {
-          console.log(err)
-          reject(false)
-        }
-      })
     })
   },
 
@@ -86,14 +82,10 @@ Page({
   changeSortType: function (e) {
     var that = this
     wx.showActionSheet({
-      itemList: ['添加联系人','建 立 群 聊'],
+      itemList: ['建 立 群 聊'],
       success(res) {
         // console.log(res.tapIndex)
         if (res.tapIndex == 0) {
-          wx.navigateTo({
-            url: '/pages/staffList/staffList',
-          })
-        } else {
           that.setData({
             checkType: 'checkbox'
           });
@@ -255,6 +247,23 @@ Page({
     // console.log(item)
     wx.navigateTo({
       url: '/pages/userInfomation/userProfile/userProfile?oppOpenId='+item.openId+'&nickName='+item.name
+    })
+  },
+
+  async getProfile() {
+    return new Promise((resolve) => {
+      var that = this
+      wx.request({
+        url: app.config.serverUrl + '/api/getProfile',
+        method: 'POST',
+        dataType: 'json',
+        data: {
+          clientId: app.config.socket.id
+        },
+        success: res => {
+          resolve(res.data.wx_openid)
+        }
+      })
     })
   },
 

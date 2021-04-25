@@ -10,6 +10,10 @@ Component({
           this.setData({
             dataSource: this._groupby(newVal)
           })
+        } else {
+          this.setData({
+            dataSource: []
+          })
         }
       }
     },
@@ -119,6 +123,15 @@ Component({
           companyPageUrl: newVal
         })
       }
+    },
+    blackListPageUrl: {
+      type: String,
+      value: '',
+      observer: function (newVal, oldVal) {
+        this.setData({
+          blackListPageUrl: newVal
+        })
+      }
     }
   },
 
@@ -136,6 +149,7 @@ Component({
     newFriendsPageUrl: '', //新的朋友页面Url
     groupPageUrl: '', //加入的群聊页面Url
     companyPageUrl: '', //公司全体人员通讯录
+    blackListPageUrl: '', //黑名单
   },
 
   //在组件在视图层布局完成后执行
@@ -269,6 +283,12 @@ Component({
     _company: function () {
       wx.navigateTo({
         url: this.data.companyPageUrl
+      })
+    },
+
+    _blackList: function () {
+      wx.navigateTo({
+        url: this.data.blackListPageUrl
       })
     },
 

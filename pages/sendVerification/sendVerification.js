@@ -9,7 +9,8 @@ Page({
     verification: null, // 验证消息
     nickName: null, // 昵称
     oppOpenId: null, // 对方的微信openId
-    disabled: true, // 未输入验证消息不允许发送申请
+    disabled: true, // 未输入验证消息或者好友关系不允许发送申请
+    isFriend: true, // 是否为好友关系
   },
 
   /**
@@ -18,6 +19,7 @@ Page({
   onLoad: function (options) {
     var that = this
     that.data.oppOpenId = options.oppOpenId
+    that.checkFriends(options.oppOpenId)
   },
 
   /**
@@ -35,20 +37,53 @@ Page({
   },
 
   /**
+   * 验证好友关系
+   * @param {string} oppOpenId 
+   */
+  checkFriends: function (oppOpenId) {
+    var that = this
+    wx.request({
+      url: app.config.serverUrl + '/api/checkFriend',
+      method: 'POST',
+      dataType: 'json',
+      data: {
+        clientId: app.config.socket.id,
+        oppOpenId: oppOpenId
+      },
+      success: res => {
+        if (res.data.ret === -3) {
+          that.data.isFriend = false
+        } else {
+          wx.showToast({
+            title: '已添加好友！',
+            icon: 'error',
+            duration: 1000
+          })
+          setTimeout(() => {
+            wx.navigateBack({
+              delta: 1,
+            })
+          }, 1000)
+        }
+      }
+    })
+  },
+
+  /**
    * 获取验证消息
    * @param {any} e 
    */
   setVerification: function (e) {
     var that = this
-    if (!e.detail.value) {
-      that.setData({
-        disabled: true
-      })
-    } else {
+    if (e.detail.value && !that.data.isFriend) {
       that.setData({
         disabled: false
       })
       that.data.verification = e.detail.value
+    } else {
+      that.setData({
+        disabled: true
+      })
     }
   },
 

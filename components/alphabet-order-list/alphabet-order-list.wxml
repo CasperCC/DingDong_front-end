@@ -95,6 +95,12 @@
             <view>加入的群聊</view>
           </view>
         </view>
+        <view class='tag-item' bindtap='_blackList' wx:if="{{blackListPageUrl!=''}}">
+          <image class='item-image' src='/utils/resources/icons/blacklist.png'></image>
+          <view class='item-text'>
+            <view>黑名单</view>
+          </view>
+        </view>
         <block wx:for='{{dataSource}}' wx:key='tag' wx:for-item='pitem'>
           <view id='{{pitem.tag}}' class='letter-tag' style='{{tagStyle}}'>{{pitem.tag == 'PoundSign' ? '#' : pitem.tag}}</view>
           <block wx:for='{{pitem.data}}' wx:key='key' wx:for-item='item' wx:for-index='j'>

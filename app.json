@@ -19,7 +19,8 @@
     "pages/reply/overwork/overwork",
     "pages/reply/vacation/vacation",
     "pages/contacts/allUsers/allUsers",
-    "pages/userInfomation/userProfile/userProfile"
+    "pages/userInfomation/userProfile/userProfile",
+    "pages/contacts/blackList/blackList"
   ],
   "permission": {
     "scope.userLocation": {

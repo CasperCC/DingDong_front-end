@@ -1,0 +1,2 @@
+/* pages/contacts/blackList/blackList.wxss */
+@import "../allUsers/allUsers.wxss";
