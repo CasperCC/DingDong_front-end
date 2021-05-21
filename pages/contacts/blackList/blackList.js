@@ -47,7 +47,6 @@ Page({
           clientId: app.config.socket.id
         },
         success: res => {
-          console.log(res.data)
           resolve(res.data)
         }
       })

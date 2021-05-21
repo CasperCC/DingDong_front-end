@@ -34,7 +34,6 @@ App({
     await that.getUserInfo()
     var code = await that.getLoginCode()
     await that.socketStart(code)
-    console.log(that.config.socket.id)
     await that.checkUserInfo()
   },
 
@@ -44,7 +43,7 @@ App({
   getUserInfo: () => {
     return new Promise((resolve) => {
       if (that.globalData.userInfo) {
-        resolve(that.globalData.userInfo)
+        resolve(true)
       }
     })
   },
@@ -56,8 +55,8 @@ App({
     return new Promise((resolve) => {
       const socket = io(that.config.serverUrl, { query: 'code='+code, 'reconnect': true })
       // 重连事件
-      socket.on('reconnect', () => {
-        var newCode = that.getLoginCode()
+      socket.on('reconnect', async() => {
+        var newCode = await that.getLoginCode()
         socket.emit('reconnection', {
           code: newCode
         })
@@ -72,7 +71,7 @@ App({
 
       // 连接事件
       socket.on('connect', () => {
-        console.log('connect')
+        console.log('connect', socket.id)
         that.config.socket = socket
         resolve(socket)
       })

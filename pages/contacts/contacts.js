@@ -41,7 +41,7 @@ Page({
         if (data[index].mobile == null) {
           data[index].mobile = ''
         }
-        var nickname = data[index].nickname ? data[index].nickname : data[index].wx_name
+        var nickname =  (data[index].nickname ? data[index].nickname : data[index].wx_name) + '-' + data[index].belong_id
         that.setData({
           [`staffList[${index}].id`]: data[index].friend_openid,
           [`staffList[${index}].name`]: nickname,

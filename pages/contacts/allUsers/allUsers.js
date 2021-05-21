@@ -67,9 +67,10 @@ Page({
         if (data[index].mobile == null) {
           data[index].mobile = ''
         }
+        var nickname =  (data[index].nickname ? data[index].nickname : data[index].wx_name) + '-' + data[index].belong_id
         that.setData({
           [`staffList[${index}].id`]: data[index].wx_openid,
-          [`staffList[${index}].name`]: data[index].wx_name,
+          [`staffList[${index}].name`]: nickname,
           [`staffList[${index}].mobile`]: data[index].mobile,
           [`staffList[${index}].photo`]: data[index].avatarUrl,
           [`staffList[${index}].positionName`]: data[index].pid,
