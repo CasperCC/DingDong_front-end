@@ -7,8 +7,8 @@ App({
    * 小程序相关配置
    */
   config: {
-    serverUrl: 'http://127.0.0.1:7001',
-    // serverUrl: 'https://cochan.tech',
+    // serverUrl: 'http://127.0.0.1:7001',
+    serverUrl: 'https://cochan.tech',
     uploadUrl: 'https://oss.cochan.tech',
     imageOssPath: 'DingDong/images/',
     vedioOssPath: 'DingDong/vedios/',
