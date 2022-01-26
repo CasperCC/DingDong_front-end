@@ -1,19 +1,19 @@
 <!--pages/login/login.wxml-->
 <view id="container">
   <view wx:if="{{!hasUserInfo}}" class="containertext">
-      <text class="text">还未登录哦</text>
-      <text class="textlight">登陆后可享受更多功能~</text>
-      <view id="button"> 
-        <button type="primary" class="mini-btn" size="mini" bindtap="getUserProfile">一键登录</button>
+      <view class='header'>
+          <image src='/utils/resources/icons/DingDongICON.png'></image>
       </view>
-  </view>
 
-  <view wx:else class="containertext">
-    <text class="text" style="">确实是我本人了</text>
-    <view class="nameavatar">
-      <text class="textmy basis-lg">{{userInfo.nickName}}</text>
-      <view class="cu-avatar xl round basis-xs" style="background-image:url({{userInfo.avatarUrl}});margin-right:50rpx;margin-left:50rpx;"></view>
-    </view>
-  </view>
+      <view class='content'>
+          <view>申请获取以下权限，</view>
+          <view>仅用于获取您的员工身份信息。</view>
+          <text>获取你的公开信息(昵称，头像等)</text>
+      </view>
 
+      <button class='bottom' type='primary' lang="zh_CN" bindtap="getUserProfile">
+          授权登录
+      </button>
+  </view>
+  <view wx:else>请重新打开小程序</view>
 </view>

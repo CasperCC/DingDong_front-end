@@ -79,18 +79,69 @@ Page({
       })
       that.data.location = data
     })
+    .catch(() => {
+      wx.getSetting({  //先查看授权情况
+        success:function(res){
+          var statu = res.authSetting;
+          if(!statu['scope.userLocation']){   //判断是否授权，没有授权就提示下面的信息
+            wx.showModal({
+              title:'需要获取您的地理位置，请确认授权，否则小程序功能将无法使用',
+              cancelColor: '需要获取您的地理位置，请确认授权，否则地图功能将无法使用',
+              success:function(tip){
+                if(tip.confirm){ //查看是否点击确定
+                  wx.openSetting({  //打开设置
+                    success:function(data){
+                      if(data.authSetting["scope.userLocation"] == true){ //到这一步表示打开了位置授权
+                        wx.showToast({
+                          title: '授权成功',
+                          icon: 'success',
+                          duration: 1000
+                        })
+                        that.relocate()
+                        /*
+                        可以在这里重新请求数据等操作
+                        */
+                        
+                      }else{
+                        wx.showToast({
+                          title: '授权失败',
+                          icon: 'none',
+                          duration: 1000
+                        })
+                      }
+                    },
+                    fail:function(){
+                      
+                    }
+                  })
+                }else{
+                  wx.showToast({
+                    title: '授权失败',
+                    icon: 'none',
+                    duration: 1000
+                  })
+                }
+              }
+            })
+          }
+        }
+      })
+    })
   },
 
   /**
    * 获取用户位置信息
    */
   getRegeo: function () {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       var amap = new amapFile.AMapWX({key:'2f57d71b9cf91b3b4cf002e1ecefb43e'});
       amap.getRegeo({      
         success: function(data){
           //成功回调
-          resolve(data[0]) 
+          resolve(data[0])
+        },
+        fail: function(res){
+          reject()
         }
       })
     })

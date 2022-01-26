@@ -13,7 +13,7 @@ Page({
         name: '公告',
         open: false,
         pages: [
-          {path: "announce", title: '发布公告'},
+          // {path: "announce", title: '发布公告'},
           {path: "history", title: '历史公告'}
         ]
       }, {
